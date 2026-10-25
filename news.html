@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <!-- ความปลอดภัย: อนุญาตสคริปต์เฉพาะไฟล์ในเว็บนี้ (กัน XSS) ดู vercel.json สำหรับ header ฝั่งเซิร์ฟเวอร์ -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https:; frame-src https://www.youtube.com https://www.youtube-nocookie.com https://www.google.com https://maps.google.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https:; frame-src https://www.youtube.com https://www.youtube-nocookie.com https://www.google.com https://maps.google.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ข่าวสารและกิจกรรม - ปทุมวันเกมส์ ครั้งที่ 50</title>
@@ -23,6 +23,7 @@
   <div id="site-footer"></div>
 
   <script src="js/config.js"></script>
+  <script src="js/data/content.js"></script>
   <script src="js/api.js"></script>
   <script src="js/layout.js"></script>
   <script src="js/pages/news.js"></script>

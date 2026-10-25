@@ -303,7 +303,8 @@
 
     async getNews() {
       const json = await getJson(cfg.news);
-      return (json.data || []).slice().sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+      const local = window.SiteData?.news || [];
+      return [...local, ...(json.data || [])].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
     },
 
     async getLatestNews() {

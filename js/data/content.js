@@ -48,5 +48,18 @@ window.SiteData.souvenir = {
   ],
 };
 
+// ข่าวสารที่ใส่เองในเว็บ (แสดงร่วมกับข่าวจาก API เมื่อเปิดใช้)
+// video: ลิงก์ฝังวิดีโอ (Google Drive ใช้ .../file/d/<id>/preview) ไฟล์ต้องแชร์แบบ "ทุกคนที่มีลิงก์"
+window.SiteData.news = [
+  {
+    id: 'vtr-50',
+    title: 'VTR ปทุมวันเกมส์ ครั้งที่ 50',
+    content: 'ชมวิดีโอแนะนำการแข่งขันกีฬาสาธิตสามัคคี ครั้งที่ 50 "ปทุมวันเกมส์" ภายใต้แนวคิด One Unity One Victory',
+    createdAt: '2026-10-25',
+    coverImage: 'assets/images/news/vtr-cover.jpg',
+    video: 'https://drive.google.com/file/d/1ftYKq8w_f96QqkuTckPdONM5F-tGHV0p/preview',
+  },
+];
+
 // ผู้สนับสนุนในหน้าแรก: ใส่ชื่อ (string) หรือ { name, logo } เมื่อมีโลโก้จริง
 window.SiteData.sponsors = ['ผู้สนับสนุน 1', 'ผู้สนับสนุน 2', 'ผู้สนับสนุน 3', 'ผู้สนับสนุน 4', 'ผู้สนับสนุน 5', 'ผู้สนับสนุน 6'];

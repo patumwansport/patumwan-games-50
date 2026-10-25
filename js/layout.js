@@ -24,8 +24,8 @@
     }
   }
 
-  // iframe ฝังได้เฉพาะ YouTube และ Google Maps (ต้องตรงกับ frame-src ใน CSP)
-  const EMBED_HOSTS = ['www.youtube.com', 'www.youtube-nocookie.com', 'www.google.com', 'maps.google.com'];
+  // iframe ฝังได้เฉพาะ YouTube, Google Maps และวิดีโอ Google Drive (ต้องตรงกับ frame-src ใน CSP)
+  const EMBED_HOSTS = ['www.youtube.com', 'www.youtube-nocookie.com', 'www.google.com', 'maps.google.com', 'drive.google.com'];
   function embedUrl(v) {
     try {
       const u = new URL(String(v ?? '').trim());
@@ -71,7 +71,8 @@
     try {
       saved = localStorage.getItem('darkMode');
     } catch {}
-    return saved !== null ? saved === 'true' : matchMedia('(prefers-color-scheme: dark)').matches;
+    // ค่าเริ่มต้นเป็นโหมดสว่าง (พื้นขาว) จนกว่าผู้ใช้จะกดสลับเป็นโหมดมืดเอง
+    return saved === 'true';
   }
 
   function applyDark(dark) {
