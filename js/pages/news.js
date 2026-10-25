@@ -40,19 +40,11 @@
   }
 
   // ส่วนหัวของหน้าต่างข่าว: วิดีโอ (ถ้ามี) หรือรูปปก
-  // วิดีโอวางปุ่มปิดไว้ในแถบด้านบน ไม่ให้ทับปุ่มของตัวเล่น Google Drive ที่มุมขวาบน
   function media(n) {
-    const closeBtn = (cls) => `<button type="button" data-close class="${cls} rounded-full p-2 text-white" aria-label="ปิด">${UI.icon.close}</button>`;
     const src = n.video && UI.embedUrl(n.video);
     return src
-      ? `<div class="bg-black">
-          <div class="flex justify-end p-2">${closeBtn('hover:bg-white/15')}</div>
-          <div class="aspect-video w-full"><iframe src="${src}" title="${esc(n.title)}" class="h-full w-full" allow="autoplay; fullscreen" allowfullscreen></iframe></div>
-        </div>`
-      : `<div class="relative">
-          <img src="${UI.safeUrl(n.coverImage)}" alt="" class="max-h-[420px] w-full object-cover">
-          ${closeBtn('absolute right-3 top-3 bg-black/50 hover:bg-black/70')}
-        </div>`;
+      ? `<div class="aspect-video w-full bg-black"><iframe src="${src}" title="${esc(n.title)}" class="h-full w-full" allow="autoplay; fullscreen" allowfullscreen></iframe></div>`
+      : `<img src="${UI.safeUrl(n.coverImage)}" alt="" class="max-h-[420px] w-full object-cover">`;
   }
 
   function openNews(n) {
@@ -60,7 +52,9 @@
     document.body.style.overflow = 'hidden';
     modalEl.innerHTML = `
       <div class="fixed inset-0 z-50 overflow-y-auto bg-black/70 p-4 backdrop-blur-sm" data-overlay>
-        <div class="mx-auto my-8 max-w-4xl overflow-hidden rounded-2xl bg-white shadow-2xl dark:bg-gray-900" role="dialog" aria-modal="true" aria-label="${esc(n.title)}">
+        <!-- ปุ่มปิดอยู่มุมจอ นอกหน้าต่าง: ไม่ทับปุ่มของตัวเล่นวิดีโอที่มุมขวาบน -->
+        <button type="button" data-close class="fixed right-4 top-4 z-10 rounded-full bg-white/15 p-2 text-white ring-1 ring-white/30 transition hover:bg-white/30" aria-label="ปิด">${UI.icon.close}</button>
+        <div class="mx-auto mb-8 mt-16 max-w-4xl overflow-hidden rounded-2xl bg-white shadow-2xl dark:bg-gray-900" role="dialog" aria-modal="true" aria-label="${esc(n.title)}">
           ${media(n)}
           <div class="p-6 sm:p-8">
             <p class="text-sm text-brand-500 dark:text-gray-400">${fmtDate(n.createdAt)}</p>
