@@ -1,0 +1,7 @@
+# ระบบลงทะเบียน (ต้องใช้เซิร์ฟเวอร์ Node.js + ฐานข้อมูล ไม่ขึ้น GitHub Pages)
+registration/
+# ไฟล์ทำงานในเครื่อง
+.claude/
+google-sheet/
+.vercel/
+.DS_Store

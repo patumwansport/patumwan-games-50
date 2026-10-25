@@ -1,0 +1,122 @@
+@font-face {
+  font-family: 'srinakharinwirot';
+  src: url('../assets/fonts/srinakharinwirot-regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* ชุดสีปทุมวันเกมส์: Hero #2e438a, Navy Deep #202f5b, Support #ee4784, Pink Deep #c5336a */
+  --page-bg: #ffffff;
+  /* ไล่สีตามแถบ Gradient ในชุดสี น้ำเงิน -> ชมพู -> เหลืองทอง (#dba335 จากโลโก้) แล้วย้อนกลับ
+     วนซ้ำ 2 รอบเพื่อให้เลื่อนต่อเนื่องไม่สะดุด */
+  --accent-bar: linear-gradient(
+    90deg,
+    #2e438a 0%, #ee4784 12.5%, #dba335 25%, #ee4784 37.5%,
+    #2e438a 50%, #ee4784 62.5%, #dba335 75%, #ee4784 87.5%, #2e438a 100%
+  );
+  /* ไล่สีน้ำเงิน -> ชมพู ตามแถบ Gradient ในรูปแบบชุดสี */
+  --table-head: linear-gradient(90deg, #2e438a 0%, #674e88 35%, #b0628f 70%, #ee4784 100%);
+}
+
+.dark {
+  --page-bg: linear-gradient(180deg, #202f5b 0%, #1d2865 100%);
+  --accent-bar: linear-gradient(
+    90deg,
+    #4d65a7 0%, #ee4784 12.5%, #dba335 25%, #ee4784 37.5%,
+    #4d65a7 50%, #ee4784 62.5%, #dba335 75%, #ee4784 87.5%, #4d65a7 100%
+  );
+}
+
+html {
+  scroll-behavior: smooth;
+  /* ไม่ให้มีกรอบ/พื้นเทาเวลาแตะลิงก์บนมือถือ */
+  -webkit-tap-highlight-color: transparent;
+  /* ซ่อนแถบเลื่อนของหน้า (ยังเลื่อนด้วยล้อเมาส์/ทัชแพด/คีย์บอร์ดได้ตามปกติ) */
+  scrollbar-width: none;
+}
+body {
+  scrollbar-width: none;
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+  background: transparent;
+}
+
+body {
+  background: var(--page-bg);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+.accent-bar {
+  background: var(--accent-bar);
+  background-size: 200% 100%;
+  animation: accent-flow 4s linear infinite;
+}
+
+@keyframes accent-flow {
+  from {
+    background-position: 0% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .accent-bar {
+    animation: none;
+  }
+}
+
+/* ค่อย ๆ แสดงเมื่อเลื่อนลงมาถึง (layout.js ใส่คลาส reveal / is-visible ให้) */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* แถบหัว/ท้ายตาราง */
+.table-head {
+  background: var(--table-head);
+}
+
+/* ข้อความยาวในข่าวที่มาจาก API */
+.prose-news {
+  white-space: pre-line;
+  line-height: 1.9;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
