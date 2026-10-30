@@ -15,11 +15,12 @@ const toggle = document.getElementById('toggle-password');
 const configReady = fetch('supabase.json', { cache: 'no-cache' }).then(/* ประมวลผลต่อเมื่อคำขอก่อนหน้าสำเร็จในหลังบ้าน */ (res) => res.json());
 
 // ล็อกอินค้างอยู่แล้วก็เข้าหน้าแอดมินเลย (หน้าแอดมินตรวจ session ซ้ำ ถ้าหมดอายุจะส่งกลับมาหน้านี้)
-try {
-  if (Object.keys(localStorage).some(/* ตรวจว่ามีรายการที่ตรงเงื่อนไขหรือไม่ในหลังบ้าน */ (k) => /^sb-.+-auth-token$/.test(k))) location.replace(ADMIN_PAGE);
-} catch {
-  // ไม่มี localStorage ก็ล็อกอินใหม่ได้ตามปกติ
-}
+// ดูเฉพาะ token ของโปรเจกต์ในไฟล์ supabase.json: เว็บอื่นใน origin เดียวกัน (เช่น *.github.io) อาจเก็บ token ของ Supabase โปรเจกต์อื่นไว้
+// ซึ่งหน้าแอดมินใช้ไม่ได้ ถ้านับรวมจะส่งกลับไปกลับมาระหว่างสองหน้าไม่จบ
+configReady.then(/* ประมวลผลต่อเมื่อคำขอก่อนหน้าสำเร็จในหลังบ้าน */ (config) => {
+  const ref = new URL(config.url).hostname.split('.')[0];
+  if (localStorage.getItem(`sb-${ref}-auth-token`)) location.replace(ADMIN_PAGE);
+}).catch(/* ไม่มี localStorage หรืออ่านการตั้งค่าไม่ได้ก็ล็อกอินใหม่ได้ตามปกติ */ () => {});
 
 username.focus();
 
