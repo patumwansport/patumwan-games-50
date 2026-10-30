@@ -1,5 +1,35 @@
 /* เนื้อหาของระบบผลกีฬา ใช้ tokens, admin-field และ admin-button จาก admin-ui/src/index.css */
 :root { --ink: var(--foreground); --blue: var(--primary); --paper: var(--background); --bg: var(--canvas); --line: var(--border); }
+.results-theme {
+  --primary: #2e438a;
+  --ring: #2e438a;
+  --results-blue-soft: #edf1fb;
+  --results-blue-border: #cbd5ef;
+  --accent: #c5336a;
+  --accent-soft: #fff0f5;
+}
+.results-theme [aria-current='page'] { color: var(--primary-foreground); }
+.results-theme [aria-current='page'] > .absolute { background: var(--primary); }
+.results-theme header {
+  background: linear-gradient(90deg, #2e438a, #ee4784 68%, #dba335) bottom / 100% 3px no-repeat, #f5f7fd;
+  border-bottom-color: var(--results-blue-border);
+}
+.results-theme .admin-button { color: var(--primary); border-color: var(--results-blue-border); }
+.results-theme .admin-button::before { background: var(--results-blue-soft); }
+.results-theme .admin-button-primary { color: var(--primary-foreground); border-color: var(--primary); background: var(--primary); }
+.results-theme .admin-button-primary::before { background: #202f5b; }
+.results-theme #main h1, .results-theme #main .schedule-day h2 { color: var(--primary); }
+.results-theme #main .eyebrow { color: var(--accent); }
+.results-theme #main .workflow-tabs button[aria-pressed='true'] { border-bottom-color: #ee4784; }
+.results-theme #main .back-link { color: var(--accent); }
+.results-theme [aria-current='page'] > .absolute {
+  background: linear-gradient(135deg, #2e438a, #202f5b);
+  box-shadow: inset 0 -3px #ee4784;
+}
+.results-theme #main th { background: var(--results-blue-soft); color: var(--primary); }
+.results-theme #main .empty { border-color: var(--results-blue-border); background: #f7f9fe; }
+.results-theme #main .section-number { background: var(--results-blue-soft); }
+.results-theme #main .workflow-tabs button[aria-pressed='true'] .tab-count { background: var(--results-blue-soft); color: var(--primary); }
 #main { line-height: 1.6; }
 #main h1 { margin: 0 0 .4rem; font-size: 1.5rem; line-height: 1.3; font-weight: 600; letter-spacing: -.025em; }
 #main h2 { margin: 0 0 .6rem; font-size: 1.1rem; font-weight: 600; }

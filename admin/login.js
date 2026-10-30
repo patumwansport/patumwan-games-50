@@ -27,7 +27,9 @@ username.focus();
 toggle.addEventListener('click', /* ตอบสนองเหตุการณ์ 'click' และอัปเดตข้อมูลหรือหน้าจอที่เกี่ยวข้อง */ () => {
   const show = password.type === 'password';
   password.type = show ? 'text' : 'password';
-  toggle.textContent = show ? 'ซ่อน' : 'แสดง';
+  // คงไอคอนไว้และแจ้งสถานะผ่านชื่อปุ่มสำหรับผู้ใช้และโปรแกรมอ่านหน้าจอ
+  toggle.setAttribute('aria-label', show ? 'ซ่อนรหัสผ่าน' : 'แสดงรหัสผ่าน');
+  toggle.setAttribute('title', show ? 'ซ่อนรหัสผ่าน' : 'แสดงรหัสผ่าน');
   toggle.setAttribute('aria-pressed', String(show));
   password.focus();
 });

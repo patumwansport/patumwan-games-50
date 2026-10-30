@@ -79,8 +79,8 @@ export default function App({ session }: { session: Session }) {
   };
 
   return (
-    <AnimatedSidebarProvider className="h-svh min-h-0 overflow-hidden bg-background" style={{ "--sidebar-width": "16rem" }}>
-      <AnimatedSidebar ariaLabel="เมนูระบบจัดการเนื้อหา" collapsible="icon" className="min-h-0" panelClassName="border-border bg-canvas">
+    <AnimatedSidebarProvider className="cms-theme h-svh min-h-0 overflow-hidden bg-background" style={{ "--sidebar-width": "16rem" }}>
+      <AnimatedSidebar ariaLabel="เมนูระบบจัดการเนื้อหา" collapsible="icon" className="min-h-0" panelClassName="border-border bg-primary">
         <AnimatedSidebarHeader className="p-3 pb-2">
           <div className="flex min-h-11 items-center gap-3 overflow-hidden px-1.5">
             <img src={siteUrl("assets/images/logo.png")} alt="" width={32} height={32} className="size-8 shrink-0 object-contain" />
@@ -200,7 +200,7 @@ export default function App({ session }: { session: Session }) {
         </header>
         {accountError ? <p role="alert" className="bg-accent-soft px-5 py-3 text-accent">{accountError}</p> : null}
 
-        {active === OVERVIEW && canEdit ? <Dashboard username={session.displayName} onOpen={open} /> : null}
+        {active === OVERVIEW && canEdit ? <Dashboard username={session.displayName} canScore={canScore} onOpen={open} /> : null}
         {active === MEMBERS && canManage ? <Members session={session} /> : null}
         {active === ROLES ? <Roles canManage={canManage} onMembers={/* จัดการ onMembers ขององค์ประกอบบนหน้าจอ */ () => open(MEMBERS)} /> : null}
         {active === SETTINGS ? <Settings session={session} /> : null}

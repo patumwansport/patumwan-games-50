@@ -7,7 +7,7 @@ import { siteUrl } from "@/admin/paths";
 // แสดงขั้นตอนเปลี่ยนรหัสผ่านก่อนเข้าใช้งาน
 export function FirstPassword({ session }: { session: Session }) {
   return <main className="grid min-h-svh place-items-center bg-canvas px-4 py-8">
-    <div className="w-full max-w-md rounded-xl border border-border bg-background p-6 sm:p-7">
+    <div className="mx-auto w-full max-w-md rounded-xl border border-border bg-background p-6 sm:p-7">
       <img src={siteUrl("assets/images/logo.png")} alt="" width={56} height={56} className="mx-auto size-14 object-contain" />
       <h1 className="mt-3 text-center text-xl font-semibold">ตั้งรหัสผ่านใหม่</h1>
       <p className="mt-2 text-center text-sm text-muted-foreground">สวัสดี {session.displayName} กรุณาตั้งรหัสผ่านของคุณเองก่อนเริ่มใช้งาน</p>

@@ -66,7 +66,7 @@ function ResultsWorkspace() {
     catch (err) { setError(err instanceof Error ? err.message : "ออกจากระบบไม่สำเร็จ"); }
     finally { setSigningOut(false); }
   };
-  return <AnimatedSidebarProvider className="h-svh min-h-0 overflow-hidden bg-background" style={{ "--sidebar-width": "16rem" }} openMobile={mobileOpen} onOpenMobileChange={setMobileOpen}>
+  return <AnimatedSidebarProvider className="results-theme h-svh min-h-0 overflow-hidden bg-background" style={{ "--sidebar-width": "16rem" }} openMobile={mobileOpen} onOpenMobileChange={setMobileOpen}>
     <a className="skip" href="#main" onClick={/* จัดการ onClick ขององค์ประกอบบนหน้าจอ */ (event) => { event.preventDefault(); document.getElementById("main")?.focus(); }}>ข้ามไปเนื้อหา</a>
     <div className={snapshot.user ? "contents" : "hidden"}>
       <AnimatedSidebar ariaLabel="เมนูระบบผลการแข่งขัน" collapsible="icon" className="min-h-0" panelClassName="border-border bg-canvas">

@@ -1,0 +1,24 @@
+/* ปุ่มรองแบบ Flow Button (ปุ่มหลักใช้ components/ui/flow-button.tsx ที่มีลูกศร):
+   ขอบมนแบบแคปซูล วงกลมสีขยายจากกลางปุ่มเมื่อชี้หรือกด Tab มุมปุ่มหดเป็นมนเล็ก และยุบเล็กน้อยตอนกด */
+.admin-button {
+  position: relative; isolation: isolate; overflow: hidden;
+  display: inline-flex; min-height: 2.5rem; align-items: center; justify-content: center; gap: .5rem;
+  border: 1.5px solid color-mix(in oklch, var(--foreground) 28%, transparent); border-radius: 100px;
+  padding: .45rem 1.1rem; background: transparent; color: var(--foreground); font: inherit; white-space: nowrap;
+  transition: border-color .6s cubic-bezier(.23, 1, .32, 1), border-radius .6s cubic-bezier(.23, 1, .32, 1), color .6s cubic-bezier(.23, 1, .32, 1), transform .2s ease-out;
+}
+.admin-button::before {
+  content: ""; position: absolute; z-index: -1; top: 50%; left: 50%; width: 1rem; aspect-ratio: 1;
+  border-radius: 50%; background: var(--muted); opacity: 0; transform: translate(-50%, -50%);
+  transition: width .8s cubic-bezier(.19, 1, .22, 1), opacity .8s cubic-bezier(.19, 1, .22, 1);
+}
+.admin-button:is(:hover, :focus-visible):not(:disabled) { border-color: transparent; border-radius: .6rem; }
+.admin-button:is(:hover, :focus-visible):not(:disabled)::before { width: max(160px, calc(100% + 3rem)); opacity: 1; }
+.admin-button:active:not(:disabled) { transform: scale(.95); }
+.admin-button:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+.admin-button:disabled { opacity: .5; }
+/* ปุ่มหลักที่ยังใช้ class (ไม่มีลูกศร): เติมสีน้ำเงินแทนสีเทา */
+.admin-button-primary { border-color: color-mix(in oklch, var(--foreground) 40%, transparent); font-weight: 600; }
+.admin-button-primary::before { background: var(--primary); }
+.admin-button-primary:is(:hover, :focus-visible):not(:disabled) { color: var(--primary-foreground); }
+

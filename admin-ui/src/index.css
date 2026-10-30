@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "../../assets/styles/admin-buttons.css";
 @source "./";
 
 @font-face {
@@ -71,32 +72,52 @@ body {
 
 .admin-field { display: block; width: 100%; min-height: 2.5rem; margin-top: .35rem; padding: .55rem .75rem; border: 1px solid var(--border); border-radius: .5rem; background: var(--background); font: inherit; }
 .admin-field:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
-/* ปุ่มรองแบบ Flow Button (ปุ่มหลักใช้ components/ui/flow-button.tsx ที่มีลูกศร):
-   ขอบมนแบบแคปซูล วงกลมสีขยายจากกลางปุ่มเมื่อชี้หรือกด Tab มุมปุ่มหดเป็นมนเล็ก และยุบเล็กน้อยตอนกด */
-.admin-button {
-  position: relative; isolation: isolate; overflow: hidden;
-  display: inline-flex; min-height: 2.5rem; align-items: center; justify-content: center; gap: .5rem;
-  border: 1.5px solid color-mix(in oklch, var(--foreground) 28%, transparent); border-radius: 100px;
-  padding: .45rem 1.1rem; background: transparent; color: var(--foreground); font: inherit; white-space: nowrap;
-  transition: border-color .6s cubic-bezier(.23, 1, .32, 1), border-radius .6s cubic-bezier(.23, 1, .32, 1), color .6s cubic-bezier(.23, 1, .32, 1), transform .2s ease-out;
-}
-.admin-button::before {
-  content: ""; position: absolute; z-index: -1; top: 50%; left: 50%; width: 1rem; aspect-ratio: 1;
-  border-radius: 50%; background: var(--muted); opacity: 0; transform: translate(-50%, -50%);
-  transition: width .8s cubic-bezier(.19, 1, .22, 1), opacity .8s cubic-bezier(.19, 1, .22, 1);
-}
-.admin-button:is(:hover, :focus-visible):not(:disabled) { border-color: transparent; border-radius: .6rem; }
-.admin-button:is(:hover, :focus-visible):not(:disabled)::before { width: max(160px, calc(100% + 3rem)); opacity: 1; }
-.admin-button:active:not(:disabled) { transform: scale(.95); }
-.admin-button:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
-.admin-button:disabled { opacity: .5; }
-/* ปุ่มหลักที่ยังใช้ class (ไม่มีลูกศร): เติมสีน้ำเงินแทนสีเทา */
-.admin-button-primary { border-color: color-mix(in oklch, var(--foreground) 40%, transparent); font-weight: 600; }
-.admin-button-primary::before { background: var(--primary); }
-.admin-button-primary:is(:hover, :focus-visible):not(:disabled) { color: var(--primary-foreground); }
 
 button:not(:disabled), [role="button"] { cursor: pointer; }
 button:disabled { cursor: not-allowed; }
+.cms-theme {
+  --primary: #2e438a;
+  --ring: #2e438a;
+  --accent: #c5336a;
+  --accent-soft: #fff0f5;
+  --canvas: #f0f3fc;
+  --border: #d6def1;
+}
+.cms-theme [data-slot='sidebar'] {
+  --foreground: #fff8fc;
+  --muted-foreground: #e0e7ff;
+  /* พื้นหลังตอนชี้เมนู: ขาวโปร่งบาง ๆ ไม่ใช่สีชมพูเดียวกับเมนูที่เลือกอยู่ (เดิมดูเหมือนเลือกสองเมนูพร้อมกัน) */
+  --muted: oklch(99% 0.01 270 / 0.14);
+  --border: #5065a4;
+  --primary: #2e438a;
+  --ring: #f7a5ae;
+  color: var(--foreground);
+}
+.cms-theme [data-slot='sidebar-header'] { border-bottom: 2px solid #dba335; padding-bottom: 1rem; }
+.cms-theme [data-slot='sidebar'] [aria-current='page'] { color: #fff; }
+.cms-theme [data-slot='sidebar'] [aria-current='page'] > .absolute { background: #c5336a; }
+.cms-theme [data-slot='sidebar'] [aria-current='page']:not(:has(> .absolute)) { background: #c5336a; }
+.cms-theme [data-slot='sidebar-group-label'] { color: #dce3f5; }
+.cms-theme [data-slot='sidebar-footer'] .rounded-full { background: #fce7f0; color: #2e438a; }
+.cms-theme [data-slot='sidebar-inset'] > header {
+  background: var(--background);
+}
+.cms-theme h1, .cms-theme h2 { color: #2e438a; }
+.cms-theme .admin-button { color: #2e438a; border-color: #afbee5; background: transparent; }
+.cms-theme .admin-button, .cms-theme .group.isolate {
+  border-radius: .35rem;
+  transition: background-color .15s, border-color .15s;
+}
+.cms-theme .admin-button::before, .cms-theme .group.isolate > .bg-primary { display: none; }
+.cms-theme .group.isolate { background: #2e438a; border-color: #2e438a; color: #fff8fc; }
+.cms-theme .group.isolate:hover, .cms-theme .group.isolate:focus-visible { background: #202f5b; border-color: #202f5b; }
+.cms-theme .admin-button:hover { background: #edf1f8; border-color: #2e438a; }
+.cms-theme .group.isolate > span, .cms-theme .group.isolate > svg { transition: none; transform: none; }
+.cms-theme .group.isolate > svg:first-child { display: none; }
+.cms-theme .group.isolate:hover > svg:last-child, .cms-theme .group.isolate:focus-visible > svg:last-child { right: .8rem; }
+.cms-theme [data-slot='sidebar'] [aria-current='page'], .cms-theme [data-slot='sidebar'] [aria-current='page'] > .absolute { border-radius: .35rem; }
+.cms-theme thead { background: #edf1fb; color: #2e438a; }
+.cms-theme .admin-field:focus-visible { border-color: #ee4784; }
 ::selection { background: oklch(89% 0.04 270); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }

@@ -2,7 +2,7 @@
    ชื่อคลาสของ Decap มี label ต่อท้าย (เช่น css-xxxx-AppHeaderContent) ถ้าอัปเดตเวอร์ชัน Decap ให้ตรวจหน้านี้อีกครั้ง */
 @font-face {
   font-family: 'srinakharinwirot';
-  src: url('/assets/fonts/srinakharinwirot-regular.woff') format('woff');
+  src: url('../assets/fonts/srinakharinwirot-regular.woff') format('woff');
   font-display: swap;
 }
 
@@ -38,3 +38,14 @@ header:has([class*='AppHeaderContent']) {
 [class*='SidebarContainer'] {
   display: none !important;
 }
+
+/* สีประจำงานสำหรับฟอร์มแก้ไข ให้ต่อเนื่องกับหน้าแอดมินหลัก */
+body { background: #f0f3fc; color: #202f5b; }
+[class*='EditorToolbar'] {
+  background: #edf1fb !important;
+  border-bottom: 3px solid #ee4784 !important;
+}
+[class*='ControlLabel'], h1, h2, h3 { color: #2e438a; }
+input:not([type='checkbox']):not([type='radio']), textarea, select { border-color: #bdcbea; }
+input:focus-visible, textarea:focus-visible, select:focus-visible { outline-color: #2e438a; border-color: #ee4784; }
+[class*='PublishButton']:not(:disabled) { background: #2e438a !important; color: #fff !important; }
