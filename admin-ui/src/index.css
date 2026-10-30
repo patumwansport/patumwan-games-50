@@ -84,21 +84,17 @@ button:disabled { cursor: not-allowed; }
   --border: #d6def1;
 }
 .cms-theme [data-slot='sidebar'] {
-  --foreground: #fff8fc;
-  --muted-foreground: #e0e7ff;
-  /* พื้นหลังตอนชี้เมนู: ขาวโปร่งบาง ๆ ไม่ใช่สีชมพูเดียวกับเมนูที่เลือกอยู่ (เดิมดูเหมือนเลือกสองเมนูพร้อมกัน) */
-  --muted: oklch(99% 0.01 270 / 0.14);
-  --border: #5065a4;
-  --primary: #2e438a;
-  --ring: #f7a5ae;
+  /* เมนูซ้ายพื้นอ่อน ตัวอักษรเข้ม เมนูที่เลือกเป็นพื้นน้ำเงินจาง ตอนชี้เป็นเทาจาง (คนละสีกับเมนูที่เลือก) */
+  --muted: oklch(95.5% 0.008 270);
+  --border: oklch(91% 0.009 270);
   color: var(--foreground);
 }
-.cms-theme [data-slot='sidebar-header'] { border-bottom: 2px solid #dba335; padding-bottom: 1rem; }
-.cms-theme [data-slot='sidebar'] [aria-current='page'] { color: #fff; }
-.cms-theme [data-slot='sidebar'] [aria-current='page'] > .absolute { background: #c5336a; }
-.cms-theme [data-slot='sidebar'] [aria-current='page']:not(:has(> .absolute)) { background: #c5336a; }
-.cms-theme [data-slot='sidebar-group-label'] { color: #dce3f5; }
-.cms-theme [data-slot='sidebar-footer'] .rounded-full { background: #fce7f0; color: #2e438a; }
+.cms-theme [data-slot='sidebar-header'] { border-bottom: 1px solid var(--border); padding-bottom: 1rem; }
+.cms-theme [data-slot='sidebar'] [aria-current='page'] { color: #2e438a; font-weight: 600; }
+.cms-theme [data-slot='sidebar'] [aria-current='page'] > .absolute { background: #e3e8f6; }
+.cms-theme [data-slot='sidebar'] [aria-current='page']:not(:has(> .absolute)) { background: #e3e8f6; }
+.cms-theme [data-slot='sidebar-group-label'] { color: var(--muted-foreground); }
+.cms-theme [data-slot='sidebar-footer'] .rounded-full { background: #fce7f0; color: #c5336a; }
 .cms-theme [data-slot='sidebar-inset'] > header {
   background: var(--background);
 }
