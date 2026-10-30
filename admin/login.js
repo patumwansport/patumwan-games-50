@@ -1,6 +1,6 @@
 // หน้าเข้าสู่ระบบ /admin/login.html: เข้าสู่ระบบด้วย Supabase Auth แล้วส่ง session ต่อให้หน้าแอดมิน
 // อีเมลโดเมนโรงเรียน (loginDomain ใน admin/supabase.json) กรอกเฉพาะส่วนหน้า @ ได้ เช่น kittiya.kul
-const ADMIN_PAGE = '/admin/';
+const ADMIN_PAGE = './';
 // หน้าแอดมินอ่าน token จากที่นี่ครั้งเดียวแล้วลบทิ้ง (ต้องตรงกับ HANDOFF_KEY ใน admin-ui/src/admin/supabase.ts)
 const HANDOFF_KEY = 'pw50-admin-login';
 
@@ -12,7 +12,7 @@ const submitLabel = document.getElementById('submit-label');
 const error = document.getElementById('error');
 const toggle = document.getElementById('toggle-password');
 
-const configReady = fetch('/admin/supabase.json', { cache: 'no-cache' }).then(/* ประมวลผลต่อเมื่อคำขอก่อนหน้าสำเร็จในหลังบ้าน */ (res) => res.json());
+const configReady = fetch('supabase.json', { cache: 'no-cache' }).then(/* ประมวลผลต่อเมื่อคำขอก่อนหน้าสำเร็จในหลังบ้าน */ (res) => res.json());
 
 // ล็อกอินค้างอยู่แล้วก็เข้าหน้าแอดมินเลย (หน้าแอดมินตรวจ session ซ้ำ ถ้าหมดอายุจะส่งกลับมาหน้านี้)
 try {

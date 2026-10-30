@@ -107,7 +107,7 @@
 - **ผู้ใช้ลืมรหัสผ่าน**: IT Admin กด **รีเซ็ตรหัสผ่าน** ที่ Role manager แล้วส่งรหัสชั่วคราวที่แสดงให้ผู้ใช้ ผู้ใช้เข้าด้วยรหัสนั้นแล้วตั้งใหม่
 - **IT Admin คนเดียวลืมรหัสผ่าน**: Dashboard > Authentication > Users > เลือกบัญชี > ตั้งรหัสใหม่
 - **แพ็กเกจ Free**: Supabase พักโปรเจกต์ที่ไม่มีการใช้งานราว 1 สัปดาห์ และไม่มีสำรองข้อมูลรายวัน
-  - `api/keepalive` (Vercel Cron วันละครั้งใน `vercel.json`) อ่านผลที่เผยแพร่เพื่อให้มีการใช้งานต่อเนื่อง ลดโอกาสถูกพักแต่ไม่รับประกัน ตั้ง `CRON_SECRET` ใน Vercel ได้เพื่อรับเฉพาะคำขอจาก Cron
+  - GitHub Actions `.github/workflows/supabase-keepalive.yml` (เว็บบน GitHub Pages) หรือ `api/keepalive` (Vercel Cron) อ่านผลที่เผยแพร่วันละครั้งเพื่อให้มีการใช้งานต่อเนื่อง ลดโอกาสถูกพักแต่ไม่รับประกัน
   - ถ้าถูกพัก: Dashboard > โปรเจกต์ > **Restore project** (เว็บและหน้าแอดมินใช้ไม่ได้ระหว่างนั้น) แนะนำอัปเกรด Pro ช่วงใกล้งานถึงจบงาน
   - **สำรองข้อมูล**: `SUPABASE_DB_URL='...' ./scripts/backup-supabase.sh` (วิธีหา connection string อยู่ในไฟล์) ได้ไฟล์ใน `backups/` ซึ่งไม่ขึ้น Git ควรทำทุกวันช่วงแข่งขัน
 - **ทดสอบ** (ต้องมี `brew install postgresql@17`, ไม่แตะโปรเจกต์จริง): `PATH=/opt/homebrew/opt/postgresql@17/bin:$PATH ./scripts/test-supabase.sh`

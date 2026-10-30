@@ -1,6 +1,7 @@
 /* ระบบผลการแข่งขัน (/admin/results/): ใช้บัญชีและฐานข้อมูล Supabase เดียวกับหน้าแอดมิน
    ทุกการเปลี่ยนแปลงผ่านฟังก์ชันในฐานข้อมูล (supabase/migrations) ซึ่งตรวจสิทธิ์กีฬา สถานะ และ version เอง */
 import { accounts, config, initSupabase, supabase } from '@/admin/supabase';
+import { ADMIN_ROOT, siteUrl } from '@/admin/paths';
 
 // เริ่มระบบกรอกผลและเชื่อมส่วนแสดงผลกับบริการข้อมูล
 export function startPortal() {
@@ -38,7 +39,7 @@ export function startPortal() {
   const actions = { created: 'สร้างรายการ', edited: 'แก้ไขผล', submitted: 'ส่งตรวจ', returned: 'ส่งกลับแก้ไข', approved: 'อนุมัติและเผยแพร่', withdrawn: 'ถอนผลเผยแพร่', login: 'เข้าสู่ระบบ', user_created: 'สร้างบัญชี', user_updated: 'เปลี่ยนสิทธิ์บัญชี', password_reset: 'รีเซ็ตรหัสผ่าน', password_changed: 'เปลี่ยนรหัสผ่าน', password_reset_cli: 'รีเซ็ตรหัสผ่านจากเซิร์ฟเวอร์' };
   const go = /* เปลี่ยนเส้นทางภายในระบบ */ (path) => { location.hash = `#${path}`; };
   // จัดการบัญชีและสิทธิ์กีฬาที่ Role manager ของหน้าแอดมิน (ใช้บัญชีชุดเดียวกัน)
-  const MEMBERS_PAGE = '/admin/#members';
+  const MEMBERS_PAGE = `${ADMIN_ROOT}#members`;
   const option = /* สร้างตัวเลือกพร้อมระบุค่าที่เลือกอยู่ */ (value, label, selected) => `<option value="${esc(value)}" ${String(value) === String(selected) ? 'selected' : ''}>${esc(label)}</option>`;
   const sportOptions = /* สร้างตัวเลือกกีฬาตามสิทธิ์ */ (list, selected) => list.map(/* แปลงข้อมูลแต่ละรายการเป็นค่าหรือส่วนแสดงผลในระบบกีฬา */ (s) => option(s.id, `${s.code} ${s.name}`, selected)).join('');
   const badge = /* สร้างป้ายสถานะสำหรับแสดงบนหน้าจอ */ (s) => `<span class="badge ${esc(s)}">${status[s] || esc(s)}</span>`;
@@ -124,7 +125,7 @@ export function startPortal() {
   new MutationObserver(applyAdminControls).observe(main, { childList: true, subtree: true });
   // แสดงฟอร์มและจัดการการเข้าสู่ระบบ
   function login() {
-    main.innerHTML = `<div class="login-brand"><img src="/assets/images/logo.png" alt=""><strong>ปทุมวันเกมส์ ครั้งที่ 50</strong><small>ระบบจัดการผลการแข่งขัน</small></div><form class="panel narrow login-form"><h1>เข้าสู่ระบบ</h1><p class="intro">สำหรับฝ่ายเทคนิคกีฬาและผู้ตรวจผลการแข่งขัน ใช้บัญชีเดียวกับหน้าแอดมิน</p>
+    main.innerHTML = `<div class="login-brand"><img src="${siteUrl('assets/images/logo.png')}" alt=""><strong>ปทุมวันเกมส์ ครั้งที่ 50</strong><small>ระบบจัดการผลการแข่งขัน</small></div><form class="panel narrow login-form"><h1>เข้าสู่ระบบ</h1><p class="intro">สำหรับฝ่ายเทคนิคกีฬาและผู้ตรวจผลการแข่งขัน ใช้บัญชีเดียวกับหน้าแอดมิน</p>
       <label for="username">ชื่อผู้ใช้</label><input id="username" name="username" autocomplete="username" maxlength="254" placeholder="เช่น kittiya.kul" required>
       <label for="password">รหัสผ่าน</label><input id="password" name="password" type="password" autocomplete="current-password" maxlength="128" required>
       <div class="actions"><button class="primary">เข้าสู่ระบบ</button></div></form>`;

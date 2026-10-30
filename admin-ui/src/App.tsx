@@ -29,6 +29,7 @@ import { Members } from "@/admin/members";
 import { Roles } from "@/admin/roles";
 import { Settings } from "@/admin/settings";
 import { FlowLink } from "@/components/ui/flow-button";
+import { SITE_ROOT, siteUrl } from "@/admin/paths";
 
 const FIRST_ROUTE = findPage("news")!.page.route!;
 
@@ -82,7 +83,7 @@ export default function App({ session }: { session: Session }) {
       <AnimatedSidebar ariaLabel="เมนูระบบจัดการเนื้อหา" collapsible="icon" className="min-h-0" panelClassName="border-border bg-canvas">
         <AnimatedSidebarHeader className="p-3 pb-2">
           <div className="flex min-h-11 items-center gap-3 overflow-hidden px-1.5">
-            <img src="/assets/images/logo.png" alt="" width={32} height={32} className="size-8 shrink-0 object-contain" />
+            <img src={siteUrl("assets/images/logo.png")} alt="" width={32} height={32} className="size-8 shrink-0 object-contain" />
             <div className="min-w-0 flex-1 leading-tight group-data-[state=collapsed]/sidebar:hidden">
               <p className="truncate text-base font-semibold text-foreground">ปทุมวันเกมส์ 50</p>
               <p className="truncate text-xs text-muted-foreground">ระบบจัดการเนื้อหา</p>
@@ -144,7 +145,7 @@ export default function App({ session }: { session: Session }) {
             <AnimatedSidebarGroupContent>
               <AnimatedSidebarMenu>
                 <AnimatedSidebarMenuItem>
-                  <AnimatedSidebarMenuButton href="/" target="_blank" icon={<ExternalLink className="size-4" />}>
+                  <AnimatedSidebarMenuButton href={SITE_ROOT} target="_blank" icon={<ExternalLink className="size-4" />}>
                     ดูหน้าเว็บไซต์
                   </AnimatedSidebarMenuButton>
                 </AnimatedSidebarMenuItem>
@@ -193,7 +194,7 @@ export default function App({ session }: { session: Session }) {
           </p>
           <div className="order-last w-full xl:order-none xl:w-64"><MenuSearch onOpen={open} canManage={canManage} pages={PAGES.filter(/* เลือกเฉพาะรายการที่ตรงตามเงื่อนไขในหลังบ้าน */ ({ page }) => allowed(page.id))} /></div>
           <button type="button" className="admin-button shrink-0 px-3 text-sm" onClick={/* จัดการ onClick ขององค์ประกอบบนหน้าจอ */ () => open(SETTINGS)} aria-label="ตั้งค่า Settings" title="ตั้งค่า Settings"><SettingsIcon aria-hidden="true" className="size-5" /><span className="hidden sm:inline">ตั้งค่า</span></button>
-          <FlowLink href="/" target="_blank" size="sm" icon={ExternalLink} className="hidden lg:inline-flex">
+          <FlowLink href={SITE_ROOT} target="_blank" size="sm" icon={ExternalLink} className="hidden lg:inline-flex">
             ดูหน้าเว็บไซต์
           </FlowLink>
         </header>

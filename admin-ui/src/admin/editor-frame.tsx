@@ -4,8 +4,9 @@ import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "re
 import { LoaderCircle } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import { applyEditorSize } from "@/admin/preferences";
+import { ADMIN_ROOT } from "@/admin/paths";
 
-const EDITOR_PAGE = "/admin/editor.html";
+const EDITOR_PAGE = `${ADMIN_ROOT}editor.html`;
 
 export interface EditorFrameHandle {
   /** เปิดคลังไฟล์สื่อของ Decap (ปุ่มเดิมอยู่บนแถบด้านบนที่ซ่อนไว้ มีเฉพาะหน้ารายการ ไม่มีในหน้าฟอร์ม) */

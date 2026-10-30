@@ -3,10 +3,13 @@ import { fileURLToPath } from "node:url";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
+import { relativeSiteFonts } from "./font-paths";
 
 export default defineConfig({
-  base: "/admin/",
-  plugins: [react(), tailwindcss()],
+  // path สัมพัทธ์: ใช้ได้ทั้งที่ /admin/ (Vercel) และ /patumwan-games-50/admin/ (GitHub Pages)
+  base: "./",
+  // CSS อยู่ที่ admin/app/ จึงย้อนขึ้น 2 ชั้นถึง root ของเว็บ
+  plugins: [react(), tailwindcss(), relativeSiteFonts("../../")],
   resolve: {
     alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
   },

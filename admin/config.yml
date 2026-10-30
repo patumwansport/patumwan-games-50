@@ -13,8 +13,8 @@ backend:
 # ทดสอบในเครื่องโดยไม่ต้องล็อกอิน: รัน npx decap-server แล้วเปิด http://localhost:<port>/admin/
 local_backend: true
 
-site_url: /
-logo_url: /assets/images/logo.png
+site_url: ../
+logo_url: ../assets/images/logo.png
 # เมนู "คลังไฟล์สื่อ" แสดงรูปข่าว (ช่องรูปแต่ละช่องกำหนดโฟลเดอร์ของตัวเองด้วย media_folder
 # เพราะหน้าแอดมินหารูปเดิมจากชื่อไฟล์ในโฟลเดอร์นั้น ต้องตรงกับที่เก็บรูปจริงจึงจะแสดงรูปตัวอย่างได้)
 media_folder: assets/images/news

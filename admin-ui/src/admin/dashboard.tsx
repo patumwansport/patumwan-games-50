@@ -1,6 +1,7 @@
 import { ArrowRight, ArrowUpRight, CircleHelp, Globe, Newspaper, ShieldCheck } from "@/components/ui/icons";
 import { PAGES } from "@/admin/nav";
 import { FlowButton } from "@/components/ui/flow-button";
+import { SITE_ROOT } from "@/admin/paths";
 
 const today = new Intl.DateTimeFormat("th-TH", { day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Bangkok" });
 
@@ -56,7 +57,7 @@ export function Dashboard({ username, onOpen }: { username: string | null; onOpe
               <p className="mt-2 text-sm leading-6 text-muted-foreground">ฝ่ายเทคนิคกรอกผลในระบบผลการแข่งขัน ผู้ตรวจประจำกีฬาอนุมัติก่อนนำขึ้นเว็บไซต์</p>
               <p className="mt-3 border-t border-border pt-3 text-xs leading-5 text-muted-foreground">ใช้บัญชีและลิงก์ที่แอดมินกลางมอบหมาย ระบบเนื้อหาและระบบผลการแข่งขันยังใช้บัญชีแยกกัน</p>
             </section>
-            <a href="/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-lg px-2 py-2 text-sm text-muted-foreground outline-none hover:text-primary focus-visible:ring-2 focus-visible:ring-ring">
+            <a href={SITE_ROOT} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-lg px-2 py-2 text-sm text-muted-foreground outline-none hover:text-primary focus-visible:ring-2 focus-visible:ring-ring">
               <Globe aria-hidden="true" className="size-4" /><span className="flex-1">เปิดเว็บไซต์สาธารณะ</span><ArrowRight aria-hidden="true" className="size-4" />
             </a>
           </aside>

@@ -1,0 +1,19 @@
+# เว็บอยู่บน GitHub Pages จึงใช้ GitHub Actions แทน Vercel Cron (api/keepalive.js) เพื่อให้โปรเจกต์ Supabase แบบ Free
+# มีการใช้งานทุกวัน ลดโอกาสถูกพักก่อนวันงาน (ไม่รับประกัน แพ็กเกจ Pro ไม่ถูกพัก)
+# อ่านเฉพาะผลที่เผยแพร่แล้วด้วย publishable key ซึ่งเป็นคีย์สาธารณะเดียวกับใน js/config.js
+name: Supabase keep-alive
+on:
+  schedule:
+    - cron: "0 23 * * *" # 06:00 เวลาไทย
+  workflow_dispatch:
+permissions: {}
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Read published results
+        run: |
+          curl --fail --silent --show-error --max-time 30 \
+            -H "apikey: sb_publishable_4D9HoHSZRxNnqGVd3r6mtA_9qoFkSH9" \
+            https://unxramvsubyjteyrfzbk.supabase.co/rest/v1/rpc/public_results > /dev/null

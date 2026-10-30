@@ -1,9 +1,10 @@
 // ตั้งค่าฟอร์ม admin/editor.html ก่อนเริ่ม Decap CMS: ตรวจการเข้าสู่ระบบ รูปแบบไฟล์ js/data และตัวบันทึกผ่าน api/cms
 window.CMS_MANUAL_INIT = true;
 
-const ADMIN_PAGE = '/admin/';
-const LOGIN_PAGE = '/admin/login.html';
-const CMS_API = '/api/cms';
+const ADMIN_PAGE = './';
+const LOGIN_PAGE = 'login.html';
+// api/cms เป็น Vercel Function: เว็บบน GitHub Pages (ไฟล์ static อย่างเดียว) จะไม่มี path นี้
+const CMS_API = new URL('../api/cms', location.href).pathname;
 
 // ฟอร์มนี้แสดงในกรอบของหน้า /admin (มีเมนูด้านซ้าย) ถ้าเปิดตรง ๆ ให้ไปหน้านั้นแทน
 if (window.top === window) location.replace(ADMIN_PAGE);
@@ -49,6 +50,7 @@ function registerSessionBackend(username) {
           });
           const data = await res?.json().catch(/* จัดการข้อผิดพลาดจากงานแบบ asynchronousในหลังบ้าน */ () => ({}));
           if (res?.ok) return data;
+          if (res?.status === 404 || res?.status === 405) throw new Error('ระบบบันทึกเนื้อหาใช้ได้เมื่อเว็บ deploy บน Vercel เท่านั้น (GitHub Pages รันฟังก์ชันฝั่งเซิร์ฟเวอร์ไม่ได้) ดู README หัวข้อหน้าแอดมิน');
           throw new Error(data?.error || 'บันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่');
         };
         // api/cms ส่งแค่รายชื่อไฟล์ รูปตัวอย่างโหลดทีละรูปพร้อม token แล้วแสดงเป็น blob URL

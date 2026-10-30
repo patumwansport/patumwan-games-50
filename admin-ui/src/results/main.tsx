@@ -12,6 +12,7 @@ import { applyTextSize, textSize } from "@/admin/preferences";
 import "@/index.css";
 import "./portal.css";
 import { startPortal } from "./portal.js";
+import { siteUrl } from "@/admin/paths";
 
 interface Snapshot {
   path: string;
@@ -70,7 +71,7 @@ function ResultsWorkspace() {
     <div className={snapshot.user ? "contents" : "hidden"}>
       <AnimatedSidebar ariaLabel="เมนูระบบผลการแข่งขัน" collapsible="icon" className="min-h-0" panelClassName="border-border bg-canvas">
         <AnimatedSidebarHeader className="p-3 pb-2"><div className="flex min-h-11 items-center gap-3 overflow-hidden px-1.5">
-          <img src="/assets/images/logo.png" alt="" width={32} height={32} className="size-8 shrink-0 object-contain" />
+          <img src={siteUrl("assets/images/logo.png")} alt="" width={32} height={32} className="size-8 shrink-0 object-contain" />
           <div className="min-w-0 flex-1 leading-tight group-data-[state=collapsed]/sidebar:hidden"><p className="truncate text-base font-semibold text-foreground">ปทุมวันเกมส์ 50</p><p className="truncate text-xs text-muted-foreground">ระบบผลการแข่งขัน</p></div>
           <AnimatedSidebarClose aria-label="ปิดเมนู" className="ml-auto text-muted-foreground hover:bg-muted md:hidden"><X aria-hidden="true" className="size-4" /></AnimatedSidebarClose>
         </div></AnimatedSidebarHeader>

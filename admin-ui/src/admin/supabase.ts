@@ -1,7 +1,8 @@
-// เชื่อม Supabase ของหน้าแอดมิน: ค่า url / publishable key อ่านจาก /admin/supabase.json ตอนเปิดหน้า (ไม่ฝังตอน build)
+// เชื่อม Supabase ของหน้าแอดมิน: ค่า url / publishable key อ่านจาก admin/supabase.json ตอนเปิดหน้า (ไม่ฝังตอน build)
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { ADMIN_ROOT } from "@/admin/paths";
 
-export const LOGIN_PAGE = "/admin/login.html";
+export const LOGIN_PAGE = `${ADMIN_ROOT}login.html`;
 
 /** หน้า login.html ส่ง token มาทาง sessionStorage ครั้งเดียว (ต้องตรงกับ HANDOFF_KEY ใน admin/login.js) */
 const HANDOFF_KEY = "pw50-admin-login";
@@ -19,7 +20,7 @@ export let config: SupabaseConfig = { url: "", publishableKey: "", loginDomain: 
 /** null = ยังไม่ได้ตั้งค่า Supabase ใน admin/supabase.json */
 // โหลดการตั้งค่าและสร้างตัวเชื่อม Supabase
 export async function initSupabase(): Promise<SupabaseClient | null> {
-  config = await (await fetch("/admin/supabase.json", { cache: "no-cache" })).json();
+  config = await (await fetch(`${ADMIN_ROOT}supabase.json`, { cache: "no-cache" })).json();
   if (!config.url || !config.publishableKey) return null;
   client = createClient(config.url, config.publishableKey);
   let handoff: string | null = null;

@@ -12,6 +12,7 @@ import {
   Settings,
   UserCog,
 } from "@/components/ui/icons";
+import { ADMIN_ROOT } from "@/admin/paths";
 
 export interface Page {
   id: string;
@@ -46,7 +47,7 @@ export const MEMBERS = "members";
 export const ROLES = "roles";
 export const SETTINGS = "settings";
 export const RESULTS = "results";
-export const RESULTS_PAGE = "/admin/results/";
+export const RESULTS_PAGE = `${ADMIN_ROOT}results/`;
 /** หน้ารายการที่มีปุ่มคลังไฟล์สื่อของ Decap (หน้าฟอร์มไม่มีปุ่มนี้) */
 export const MEDIA_ROUTE = "/collections/news";
 

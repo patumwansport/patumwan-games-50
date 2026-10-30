@@ -82,6 +82,21 @@ supabase/                       ฐานข้อมูล บัญชีผ�
   ถ้าแก้ไฟล์เอง ใช้เครื่องหมาย `"` และไม่ใส่ comment ระหว่างข้อมูล ไม่อย่างนั้นหน้าแอดมินจะเปิดไฟล์นั้นไม่ได้
 - เพิ่ม/ลดช่องที่แก้ได้ที่ `admin/config.yml` ([เอกสาร Decap CMS](https://decapcms.org/docs/widgets/))
 
+### ที่ตั้งของเว็บ: GitHub Pages หรือ Vercel
+
+เว็บตอนนี้อยู่บน GitHub Pages: https://patumwansport.github.io/patumwan-games-50/ (ทุกหน้าใช้ path สัมพัทธ์ จึงใช้ได้ทั้งใต้ path ย่อยนี้และที่ root ของโดเมน)
+
+| ส่วน | GitHub Pages | Vercel |
+|---|---|---|
+| เว็บหลัก และผลการแข่งขันจาก Supabase | ใช้ได้ | ใช้ได้ |
+| `/admin` เข้าสู่ระบบ, Role manager, ตั้งค่า | ใช้ได้ (คุยกับ Supabase โดยตรง) | ใช้ได้ |
+| `/admin/results/` ระบบผลการแข่งขัน | ใช้ได้ | ใช้ได้ |
+| แก้ข่าว/ข้อมูลเว็บแล้วกด **เผยแพร่** (`api/cms`) | **ใช้ไม่ได้** (รันฟังก์ชันฝั่งเซิร์ฟเวอร์ไม่ได้) แก้ไฟล์ `js/data` ใน repo แทน | ใช้ได้ |
+| security header ใน `vercel.json` | ไม่มีผล (เหลือ CSP แบบ meta ในหน้าเว็บหลัก) | ใช้ได้ |
+| กันโปรเจกต์ Supabase ถูกพัก | `.github/workflows/supabase-keepalive.yml` | `api/keepalive.js` (Vercel Cron) |
+
+ถ้าต้องการให้ปุ่มเผยแพร่ในหน้าแอดมินใช้ได้ ต้อง deploy repo นี้บน Vercel ตามขั้นตอนด้านล่าง
+
 ### ตั้งค่าครั้งแรก (ทำครั้งเดียว)
 
 1. **ตั้งค่า Supabase** ตาม [supabase/README.md](supabase/README.md) (สร้างตาราง, Edge Function `accounts` และ IT Admin คนแรก)
