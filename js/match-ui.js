@@ -1,5 +1,5 @@
 // การ์ดแสดงผลการแข่งขัน ใช้ร่วมกันในหน้าผลการแข่งขันตามชนิดกีฬา / ประจำวัน
-(function () {
+(/* เริ่มต้นเว็บไซต์และจำกัดตัวแปรให้อยู่ภายในส่วนนี้ */ function () {
   const { esc } = window.UI;
   const MEDAL = {
     'เหรียญทอง': { kind: 'gold', label: 'ทอง' },
@@ -7,27 +7,31 @@
     'เหรียญทองแดง': { kind: 'bronze', label: 'ทองแดง' },
   };
 
+  // เรียงรายการแข่งขันตามลำดับที่กำหนด
   function sortMatches(list) {
     return list
       .slice()
-      .sort((a, b) => Api.thaiDateKey(a.gameDate) - Api.thaiDateKey(b.gameDate) || (a.gameTime || '').localeCompare(b.gameTime || '') || (a.displayName || '').localeCompare(b.displayName || '', 'th'));
+      .sort(/* เปรียบเทียบรายการเพื่อจัดลำดับในเว็บไซต์ */ (a, b) => Api.thaiDateKey(a.gameDate) - Api.thaiDateKey(b.gameDate) || (a.gameTime || '').localeCompare(b.gameTime || '') || (a.displayName || '').localeCompare(b.displayName || '', 'th'));
   }
 
   // แมตช์แบบทีมพบทีม: มีผล 2 ฝั่ง เป็นตัวเลข และไม่มีสถิติรายบุคคล
+  // ตรวจว่าผลสามารถแสดงแบบสองฝ่ายแข่งขันกันได้หรือไม่
   function isHeadToHead(m) {
     const r = m.results || [];
-    return r.length === 2 && r.every((x) => !x.gameStatistic && !(x.reward || '').trim() && /^\d+$/.test(x.gameResult || ''));
+    return r.length === 2 && r.every(/* ตรวจว่าทุกรายการผ่านเงื่อนไขในเว็บไซต์ */ (x) => !x.gameStatistic && !(x.reward || '').trim() && /^\d+$/.test(x.gameResult || ''));
   }
 
+  // สร้างป้ายสถานะสำหรับแสดงบนหน้าจอ
   function badge(text, tone) {
     return text ? `<span class="rounded-full px-2.5 py-0.5 text-xs font-medium ${tone}">${esc(text)}</span>` : '';
   }
 
+  // สร้างส่วนแสดงคู่แข่งขันและคะแนน
   function headToHead(m) {
     const [a, b] = m.results;
     const sa = Number(a.gameResult);
     const sb = Number(b.gameResult);
-    const side = (x, win) => `<div class="flex-1 ${win ? 'font-bold text-brand-800 dark:text-white' : 'text-neutral-900 dark:text-gray-300'}">${esc(x.playerName)}</div>`;
+    const side = /* สร้างข้อมูลฝ่ายหนึ่งของคู่แข่งขัน */ (x, win) => `<div class="flex-1 ${win ? 'font-bold text-brand-800 dark:text-white' : 'text-neutral-900 dark:text-gray-300'}">${esc(x.playerName)}</div>`;
     return `
       <div class="mt-4 flex items-center gap-4 rounded-xl bg-gray-50 px-4 py-3 text-center dark:bg-white/5">
         ${side(a, sa > sb)}
@@ -36,8 +40,9 @@
       </div>`;
   }
 
+  // สร้างรายการผลหรืออันดับผู้เข้าแข่งขัน
   function ranking(m) {
-    const rows = (m.results || []).slice().sort((x, y) => (Number(x.gameResult) || 999) - (Number(y.gameResult) || 999));
+    const rows = (m.results || []).slice().sort(/* เปรียบเทียบรายการเพื่อจัดลำดับในเว็บไซต์ */ (x, y) => (Number(x.gameResult) || 999) - (Number(y.gameResult) || 999));
     if (!rows.length) return '';
     return `
       <div class="mt-4 overflow-x-auto">
@@ -46,7 +51,7 @@
             <th class="py-2 pr-2 text-left">อันดับ</th><th class="py-2 text-left">ผู้เข้าแข่งขัน</th><th class="py-2 text-right">ผล/สถิติ</th><th class="py-2 pl-2 text-center">เหรียญ</th>
           </tr></thead>
           <tbody>${rows
-            .map((r) => {
+            .map(/* แปลงข้อมูลแต่ละรายการเป็นค่าหรือส่วนแสดงผลในเว็บไซต์ */ (r) => {
               const medal = MEDAL[(r.reward || '').trim()];
               return `<tr class="border-b border-gray-50 last:border-0 dark:border-white/5 ${medal ? 'bg-pink-50/70 dark:bg-pink-500/5' : ''}">
                 <td class="py-2 pr-2 font-semibold tabular-nums">${esc(r.gameResult || '-')}</td>
@@ -60,6 +65,7 @@
       </div>`;
   }
 
+  // สร้างการ์ดแสดงข้อมูลหนึ่งรายการ
   function card(m) {
     return `
       <article class="${UI.card} p-5">
@@ -82,6 +88,7 @@
   }
 
   // แสดงรายการแบบแบ่งหน้า (กด "แสดงเพิ่มเติม")
+  // สร้างชุดรายการสำหรับแสดงบนหน้าเว็บ
   function list(container, matches, { pageSize = 20 } = {}) {
     let shown = 0;
     container.innerHTML = matches.length
@@ -90,7 +97,7 @@
     if (!matches.length) return;
     const listEl = container.querySelector('[data-list]');
     const moreEl = container.querySelector('[data-more]');
-    const more = () => {
+    const more = /* สร้างส่วนขยายเพื่อดูข้อมูลเพิ่มเติม */ () => {
       listEl.insertAdjacentHTML('beforeend', matches.slice(shown, shown + pageSize).map(card).join(''));
       shown += pageSize;
       moreEl.innerHTML = shown < matches.length

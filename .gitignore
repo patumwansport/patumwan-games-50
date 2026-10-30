@@ -5,3 +5,12 @@ registration/
 google-sheet/
 .vercel/
 .DS_Store
+# หน้าแอดมิน: เก็บเฉพาะซอร์สและไฟล์ที่ build แล้ว (admin/index.html, admin/app/)
+admin-ui/node_modules/
+.local/
+# skill ของ AI agent ต่าง ๆ (เช่น npx skills add react-grab) ไม่ใช่ส่วนของเว็บ
+/.*/
+!/.github/
+/skills/
+# ไฟล์สำรองฐานข้อมูล (มีข้อมูลบัญชี)
+backups/

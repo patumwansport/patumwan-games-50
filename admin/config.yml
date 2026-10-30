@@ -1,0 +1,337 @@
+# ตั้งค่า Decap CMS ของหน้า /admin (เอกสาร: https://decapcms.org/docs/configuration-options/)
+# ทุกครั้งที่กดเผยแพร่ ระบบจะ commit ไฟล์เข้า repo แล้ว Vercel จะ deploy เว็บใหม่ให้เอง
+# เข้าสู่ระบบที่หน้า /admin/login.html ด้วยบัญชี Supabase (จัดการบัญชีที่เมนู Role manager ดู supabase/README.md)
+locale: th
+
+backend:
+  # ตัวบันทึก session (admin/cms.js) ส่งคำสั่งไปที่ api/cms ซึ่ง commit เข้า GitHub ด้วย token ฝั่งเซิร์ฟเวอร์
+  # repo และ branch ที่บันทึกตั้งใน Environment Variables ของ Vercel (GITHUB_REPO, GITHUB_BRANCH)
+  name: session
+  proxy_url: /api/cms
+  branch: main
+
+# ทดสอบในเครื่องโดยไม่ต้องล็อกอิน: รัน npx decap-server แล้วเปิด http://localhost:<port>/admin/
+local_backend: true
+
+site_url: /
+logo_url: /assets/images/logo.png
+# เมนู "คลังไฟล์สื่อ" แสดงรูปข่าว (ช่องรูปแต่ละช่องกำหนดโฟลเดอร์ของตัวเองด้วย media_folder
+# เพราะหน้าแอดมินหารูปเดิมจากชื่อไฟล์ในโฟลเดอร์นั้น ต้องตรงกับที่เก็บรูปจริงจึงจะแสดงรูปตัวอย่างได้)
+media_folder: assets/images/news
+public_folder: assets/images/news
+
+# ไฟล์ js/data/*.js อ่าน/เขียนด้วยรูปแบบ sitedata (admin/sitedata-format.js)
+# ทุกไฟล์มีช่อง _header (ซ่อน) เก็บ comment ต้นไฟล์ไว้ให้เหมือนเดิม
+collections:
+  - name: news
+    label: ข่าวสารและกิจกรรม
+    format: sitedata
+    extension: js
+    editor: { preview: false }
+    files:
+      - name: news
+        label: ข่าวสาร
+        file: js/data/news.js
+        fields:
+          - { name: _header, widget: hidden, required: false }
+          - name: news
+            label: รายการข่าว
+            label_singular: ข่าว
+            widget: list
+            add_to_top: true
+            summary: '{{fields.createdAt}} | {{fields.title}}'
+            hint: หน้าเว็บเรียงข่าวใหม่สุดก่อนตามวันที่ ไม่ต้องสนใจลำดับในรายการนี้
+            fields:
+              - { name: id, label: รหัสข่าว, widget: string, pattern: ['^[a-z0-9-]+$', 'ใช้ a-z, 0-9 และ - เท่านั้น'], hint: 'ภาษาอังกฤษตัวเล็ก ไม่ซ้ำกับข่าวอื่น ใช้ในลิงก์ news.html?id= เช่น opening-day' }
+              - { name: title, label: หัวข้อข่าว, widget: string }
+              - { name: createdAt, label: วันที่, widget: datetime, format: YYYY-MM-DD, date_format: D/M/YYYY, time_format: false }
+              - { name: coverImage, label: รูปปก, widget: image, hint: แนะนำรูปแนวตั้ง ขนาดไม่เกิน 1 MB, media_folder: /assets/images/news, public_folder: assets/images/news }
+              - { name: video, label: ลิงก์วิดีโอ, widget: string, required: false, hint: 'YouTube หรือ Google Drive (.../file/d/<id>/preview) ไฟล์ต้องแชร์แบบ "ทุกคนที่มีลิงก์" ว่าง = ข่าวธรรมดา' }
+              - { name: content, label: เนื้อหา, widget: text, hint: กด Enter เพื่อขึ้นบรรทัดใหม่ }
+              - name: pictures
+                label: ภาพกิจกรรม
+                label_singular: ภาพ
+                widget: list
+                required: false
+                fields:
+                  - { name: url, label: รูป, widget: image, media_folder: /assets/images/news, public_folder: assets/images/news }
+
+  - name: data
+    label: ข้อมูลเว็บไซต์
+    format: sitedata
+    extension: js
+    editor: { preview: false }
+    files:
+      - name: content
+        label: เพลง มาสคอต แกลเลอรี ของที่ระลึก และผู้สนับสนุน
+        file: js/data/content.js
+        fields:
+          - { name: _header, widget: hidden, required: false }
+          - name: anthem
+            label: เพลงประจำการแข่งขัน
+            widget: object
+            collapsed: true
+            fields:
+              - { name: title, label: ชื่อเพลง, widget: string }
+              - { name: subtitle, label: คำโปรย, widget: string, required: false }
+              - { name: youtubeEmbed, label: ลิงก์ฝังวิดีโอ, widget: string, required: false, hint: 'เช่น https://www.youtube.com/embed/<id> (ว่าง = ยังไม่มี)' }
+              - { name: youtubeUrl, label: ลิงก์ดูบน YouTube, widget: string, required: false, hint: 'เช่น https://youtu.be/<id>' }
+              - { name: about, label: เกี่ยวกับเพลง, label_singular: ย่อหน้า, widget: list, collapsed: false, required: false, field: { name: text, label: ย่อหน้า, widget: text } }
+              - name: structure
+                label: โครงสร้างเพลง
+                label_singular: ท่อน
+                widget: list
+                required: false
+                summary: '{{fields.name}}'
+                fields:
+                  - { name: name, label: ชื่อท่อน, widget: string }
+                  - { name: desc, label: คำอธิบาย, widget: text }
+              - name: lyrics
+                label: เนื้อเพลงและคอร์ด
+                label_singular: ท่อน
+                widget: list
+                required: false
+                summary: '{{fields.title}}'
+                fields:
+                  - { name: title, label: ชื่อท่อน, widget: string }
+                  - { name: lines, label: บรรทัด, label_singular: บรรทัด, widget: list, collapsed: false, field: { name: line, label: บรรทัด, widget: string } }
+          - name: mascots
+            label: สัญลักษณ์นำโชค (มาสคอต)
+            label_singular: มาสคอต
+            widget: list
+            summary: '{{fields.name}}'
+            fields:
+              - { name: name, label: ชื่อ, widget: string }
+              - { name: image, label: รูป, widget: image, media_folder: /assets/images/mascots, public_folder: assets/images/mascots }
+              - { name: description, label: คำอธิบาย, widget: text, required: false }
+          - name: galleries
+            label: หน้ารูปภาพ (เหรียญ สัญลักษณ์ อุปกรณ์ กำหนดการ)
+            widget: object
+            collapsed: true
+            fields:
+              - &gallery
+                name: medals
+                label: เหรียญรางวัลการแข่งขัน
+                widget: object
+                collapsed: true
+                fields:
+                  - { name: title, label: หัวข้อหน้า, widget: string }
+                  - name: images
+                    label: รูป
+                    label_singular: รูป
+                    widget: list
+                    required: false
+                    summary: '{{fields.alt}}'
+                    fields:
+                      - { name: src, label: รูป, widget: image, media_folder: /assets/images/gallery, public_folder: assets/images/gallery }
+                      - { name: alt, label: คำอธิบายรูป, widget: string, required: false }
+              - { <<: *gallery, name: signs, label: สัญลักษณ์การแข่งขัน }
+              - { <<: *gallery, name: equipment, label: อุปกรณ์การแข่งขัน }
+              - { <<: *gallery, name: schedule-official, label: กำหนดการแข่งขัน }
+          - name: souvenir
+            label: ของที่ระลึกการแข่งขัน
+            widget: object
+            collapsed: true
+            fields:
+              - { name: title, label: หัวข้อหน้า, widget: string }
+              - name: items
+                label: กรอบรูป
+                label_singular: กรอบรูป
+                widget: list
+                summary: '{{fields.label}}'
+                fields:
+                  - { name: src, label: รูป, widget: image, required: false, hint: ว่าง = แสดงกรอบเปล่า, media_folder: /assets/images/souvenir, public_folder: assets/images/souvenir }
+                  - { name: label, label: ชื่อ, widget: string }
+                  - { name: width, label: ความกว้างรูป (px), widget: number, value_type: int, min: 1 }
+                  - { name: height, label: ความสูงรูป (px), widget: number, value_type: int, min: 1 }
+                  - { name: note, label: หมายเหตุ, widget: string, required: false, hint: เช่น A4 แนวตั้ง }
+          - name: sponsors
+            label: ผู้สนับสนุน (หน้าแรก)
+            label_singular: ผู้สนับสนุน
+            widget: list
+            summary: '{{fields.name}}'
+            fields:
+              - { name: name, label: ชื่อ, widget: string }
+              - { name: logo, label: โลโก้, widget: image, required: false, hint: ว่าง = แสดงชื่อแทน, media_folder: /assets/images/sponsors, public_folder: assets/images/sponsors }
+
+      - name: history
+        label: ประวัติการแข่งขัน
+        file: js/data/history.js
+        fields:
+          - { name: _header, widget: hidden, required: false }
+          - name: history
+            label: ประวัติการแข่งขัน
+            widget: object
+            fields:
+              - { name: subtitle, label: คำโปรย, widget: string }
+              - { name: background, label: ความเป็นมา, label_singular: ย่อหน้า, widget: list, collapsed: false, field: { name: text, label: ย่อหน้า, widget: text } }
+              - name: committee
+                label: คณะผู้ริเริ่ม
+                label_singular: ท่าน
+                widget: list
+                summary: '{{fields.name}}'
+                fields:
+                  - { name: name, label: ชื่อ, widget: string }
+                  - { name: role, label: ตำแหน่ง, widget: string }
+              - { name: objectives, label: วัตถุประสงค์, label_singular: ข้อ, widget: list, collapsed: false, field: { name: text, label: ข้อ, widget: text } }
+              - { name: trophy, label: ถ้วยรางวัล, label_singular: ย่อหน้า, widget: list, collapsed: false, field: { name: text, label: ย่อหน้า, widget: text } }
+              - name: timeline
+                label: เส้นเวลาแต่ละครั้ง
+                label_singular: ครั้ง
+                widget: list
+                add_to_top: true
+                summary: '{{fields.title}}'
+                hint: เรียงจากครั้งล่าสุดไปครั้งแรก
+                fields:
+                  - { name: title, label: หัวข้อ, widget: string }
+                  - { name: current, label: ครั้งปัจจุบัน, widget: boolean, required: false, default: false }
+                  - { name: postponed, label: เลื่อน/งดการแข่งขัน, widget: boolean, required: false, default: false }
+                  - { name: text, label: เนื้อหา, label_singular: ย่อหน้า, widget: list, collapsed: false, field: { name: text, label: ย่อหน้า, widget: text } }
+                  - name: images
+                    label: รูป
+                    label_singular: รูป
+                    widget: list
+                    required: false
+                    fields:
+                      - { name: src, label: รูป, widget: image, media_folder: /assets/images/history, public_folder: assets/images/history }
+                      - { name: caption, label: คำบรรยาย, widget: string, required: false }
+
+      - name: sports
+        label: ชนิดกีฬาที่แข่งขัน
+        file: js/data/sports.js
+        fields:
+          - { name: _header, widget: hidden, required: false }
+          - name: sports
+            label: ชนิดกีฬา
+            label_singular: ชนิดกีฬา
+            widget: list
+            summary: '{{fields.code}} {{fields.name}}'
+            fields:
+              - { name: id, label: ลำดับ, widget: number, value_type: int }
+              - { name: apiId, label: รหัสกีฬาใน Google Sheet, widget: number, value_type: int, hint: ต้องตรงกับคอลัมน์รหัสกีฬาใน Google Sheet ผลการแข่งขัน }
+              - { name: code, label: รหัสแสดงผล, widget: string, hint: เช่น 01 }
+              - { name: name, label: ชื่อกีฬา, widget: string }
+              - { name: icon, label: ไอคอน, widget: image, required: false, hint: ว่าง = แสดงวงกลมรหัสกีฬาแทน, media_folder: /assets/images/sports, public_folder: assets/images/sports }
+
+      - name: institutions
+        label: สถาบันที่เข้าร่วมการแข่งขัน
+        file: js/data/institutions.js
+        fields:
+          - { name: _header, widget: hidden, required: false }
+          - name: institutions
+            label: สถาบัน
+            label_singular: สถาบัน
+            widget: list
+            summary: '{{fields.no}}. {{fields.thaiAbbr}} {{fields.nameTh}}'
+            fields:
+              - { name: no, label: ลำดับ, widget: number, value_type: int }
+              - { name: thaiAbbr, label: อักษรย่อภาษาไทย, widget: string }
+              - { name: abbr, label: อักษรย่อภาษาอังกฤษ, widget: string }
+              - { name: nameTh, label: ชื่อภาษาไทย, widget: string }
+              - { name: nameEn, label: ชื่อภาษาอังกฤษ, widget: string }
+              - name: levels
+                label: ระดับที่ส่งแข่ง
+                widget: select
+                multiple: true
+                hint: ใช้แยกตารางสรุปเหรียญ
+                options:
+                  - { label: ประถมศึกษา, value: p }
+                  - { label: มัธยมศึกษา, value: m }
+
+      - name: organizers
+        label: ผู้ประสานงานการจัดการแข่งขัน
+        file: js/data/organizers.js
+        fields:
+          - { name: _header, widget: hidden, required: false }
+          - name: organizers
+            label: ฝ่ายประสานงาน
+            label_singular: ฝ่าย
+            widget: list
+            summary: '{{fields.no}}. {{fields.group}}'
+            hint: ว่าง = แสดง "ยังไม่มีข้อมูล จะประกาศให้ทราบเร็ว ๆ นี้"
+            fields:
+              - { name: no, label: ลำดับ, widget: number, value_type: int }
+              - { name: group, label: ฝ่าย, widget: string }
+              - name: people
+                label: ผู้ประสานงาน
+                label_singular: ท่าน
+                widget: list
+                summary: '{{fields.name}}'
+                fields:
+                  - { name: name, label: ชื่อ, widget: string }
+                  - { name: phone, label: เบอร์โทร, widget: string }
+              - { name: qr, label: QR Code, widget: image, required: false, media_folder: /assets/images/organizers, public_folder: assets/images/organizers }
+
+      - name: regulations
+        label: ระเบียบและข้อบังคับการแข่งขัน
+        file: js/data/regulations.js
+        fields:
+          - { name: _header, widget: hidden, required: false }
+          - &documents
+            name: regulations
+            label: เอกสาร
+            label_singular: เอกสาร
+            widget: list
+            summary: '{{fields.title}}'
+            fields:
+              - { name: title, label: ชื่อเอกสาร, widget: string }
+              - { name: icon, label: ไอคอน, widget: image, required: false, hint: ว่าง = แสดงวงกลมรหัสกีฬาแทน, media_folder: /assets/images/sports, public_folder: assets/images/sports }
+              - { name: url, label: ไฟล์หรือลิงก์เอกสาร, widget: file, required: false, hint: 'อัปโหลด PDF หรือวางลิงก์ เช่น Google Drive (ว่าง = ยังไม่มีเอกสาร)', media_folder: /assets/documents, public_folder: assets/documents }
+
+      - name: athletes
+        label: สูจิบัตรการแข่งขัน
+        file: js/data/athletes.js
+        fields:
+          - { name: _header, widget: hidden, required: false }
+          - { <<: *documents, name: athletes }
+
+      - name: venues
+        label: แผนที่สนามแข่งขัน
+        file: js/data/venues.js
+        fields:
+          - { name: _header, widget: hidden, required: false }
+          - name: venues
+            label: แผนที่สนามแข่งขัน
+            widget: object
+            fields:
+              - { name: embed, label: ลิงก์ฝัง Google My Maps, widget: string, required: false }
+              - name: venues
+                label: สนามแข่งขัน
+                label_singular: สนาม
+                widget: list
+                required: false
+                summary: '{{fields.title}}'
+                fields:
+                  - { name: title, label: ชื่อสนาม, widget: string }
+                  - { name: image, label: รูป, widget: image, required: false, media_folder: /assets/images/venues, public_folder: assets/images/venues }
+                  - { name: url, label: ลิงก์แผนที่, widget: string, required: false }
+
+      - name: legal
+        label: นโยบายความเป็นส่วนตัวและเงื่อนไขการใช้งาน
+        file: js/data/legal.js
+        fields:
+          - { name: _header, widget: hidden, required: false }
+          - name: legal
+            label: เอกสารทางกฎหมาย
+            widget: object
+            fields:
+              - &policy
+                name: privacy
+                label: นโยบายความเป็นส่วนตัว
+                widget: object
+                collapsed: true
+                fields:
+                  - { name: title, label: หัวข้อ, widget: string }
+                  - { name: subtitle, label: หัวข้อรอง, widget: string, required: false }
+                  - { name: intro, label: บทนำ, widget: text }
+                  - name: sections
+                    label: หัวข้อย่อย
+                    label_singular: หัวข้อ
+                    widget: list
+                    summary: '{{fields.title}}'
+                    fields:
+                      - { name: title, label: หัวข้อ, widget: string }
+                      - { name: text, label: ย่อหน้า, widget: text, required: false }
+                      - { name: items, label: รายการแบบจุด, label_singular: ข้อ, widget: list, collapsed: false, required: false, field: { name: item, label: ข้อ, widget: text } }
+                  - { name: updated, label: ปรับปรุงล่าสุด, widget: string, required: false }
+              - { <<: *policy, name: terms, label: เงื่อนไขการใช้งาน }

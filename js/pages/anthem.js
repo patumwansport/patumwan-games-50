@@ -1,5 +1,5 @@
 // หน้า "เพลงประจำการแข่งขัน"
-(function () {
+(/* เริ่มต้นหน้าanthemและจำกัดตัวแปรให้อยู่ภายในส่วนนี้ */ function () {
   const { esc } = UI;
   const a = SiteData.anthem;
   const videoSrc = UI.embedUrl(a.youtubeEmbed); // ว่าง = ลิงก์ไม่ใช่ YouTube จึงไม่แสดง
@@ -8,7 +8,7 @@
     ? `<section class="${UI.card} p-6 sm:p-8">
         <h2 class="mb-6 text-2xl font-bold text-brand-800 dark:text-white">เนื้อเพลงและคอร์ด</h2>
         <div class="space-y-6">${a.lyrics
-          .map((part) => `<div><h3 class="mb-2 font-semibold text-brand-600 dark:text-brand-100">${esc(part.title)}</h3>
+          .map(/* แปลงข้อมูลแต่ละรายการเป็นค่าหรือส่วนแสดงผลในหน้าanthem */ (part) => `<div><h3 class="mb-2 font-semibold text-brand-600 dark:text-brand-100">${esc(part.title)}</h3>
             <pre class="overflow-x-auto whitespace-pre font-sans text-sm leading-7 text-neutral-900 dark:text-gray-300">${esc(part.lines.join('\n'))}</pre></div>`)
           .join('')}</div>
       </section>`
@@ -27,13 +27,13 @@
 
       ${a.about.length ? `<section class="${UI.card} p-6 sm:p-8">
         <h2 class="mb-4 text-2xl font-bold text-brand-800 dark:text-white">เกี่ยวกับเพลง</h2>
-        ${a.about.map((p) => `<p class="mb-3 leading-relaxed text-neutral-900 dark:text-gray-300">${esc(p)}</p>`).join('')}
+        ${a.about.map(/* แปลงข้อมูลแต่ละรายการเป็นค่าหรือส่วนแสดงผลในหน้าanthem */ (p) => `<p class="mb-3 leading-relaxed text-neutral-900 dark:text-gray-300">${esc(p)}</p>`).join('')}
       </section>` : ''}
 
       ${a.structure.length ? `<section class="${UI.card} p-6 sm:p-8">
         <h2 class="mb-5 text-2xl font-bold text-brand-800 dark:text-white">โครงสร้างเพลง</h2>
         <div class="grid grid-cols-2 gap-4 md:grid-cols-4">${a.structure
-          .map((s, i) => `<div class="rounded-xl bg-gradient-to-br from-brand-50 to-pink-50 p-5 text-center dark:from-white/5 dark:to-white/5">
+          .map(/* แปลงข้อมูลแต่ละรายการเป็นค่าหรือส่วนแสดงผลในหน้าanthem */ (s, i) => `<div class="rounded-xl bg-gradient-to-br from-brand-50 to-pink-50 p-5 text-center dark:from-white/5 dark:to-white/5">
               <div class="mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-brand-600 text-sm font-bold text-white">${i + 1}</div><h3 class="mt-2 font-semibold text-brand-800 dark:text-white">${esc(s.name)}</h3>
               <p class="mt-1 text-sm text-neutral-900 dark:text-gray-300">${esc(s.desc)}</p></div>`)
           .join('')}</div>

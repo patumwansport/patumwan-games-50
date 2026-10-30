@@ -1,6 +1,6 @@
 // หน้า "สถิติเหรียญรางวัล" และ "สรุปเหรียญตามสถาบัน" (ทั้งหมด / ?type=p ประถม / ?type=m มัธยม)
 // คำนวณจากผลการแข่งขันใน Google Sheet (ระดับตามคอลัมน์ "ระดับ" ของแต่ละนัด)
-(function () {
+(/* เริ่มต้นหน้าstatisticsและจำกัดตัวแปรให้อยู่ภายในส่วนนี้ */ function () {
   const app = document.getElementById('app');
   const isSchoolPage = document.body.dataset.page === 'medals-school';
   const type = ['p', 'm'].includes(UI.qs('type')) ? UI.qs('type') : '';
@@ -15,18 +15,18 @@
     <div id="summary"></div>
     <div id="table">${UI.loading()}</div>`;
 
-  app.querySelectorAll('[data-type]').forEach((b) =>
-    b.addEventListener('click', () => (location.search = b.dataset.type ? `?type=${b.dataset.type}` : ''))
+  app.querySelectorAll('[data-type]').forEach(/* ดำเนินการกับข้อมูลแต่ละรายการในหน้าstatistics */ (b) =>
+    b.addEventListener('click', /* ตอบสนองเหตุการณ์ 'click' และอัปเดตข้อมูลหรือหน้าจอที่เกี่ยวข้อง */ () => (location.search = b.dataset.type ? `?type=${b.dataset.type}` : ''))
   );
 
-  const stat = (kind, label, value, tone) => `
+  const stat = /* สร้างส่วนแสดงยอดเหรียญแต่ละชนิด*/ (kind, label, value, tone) => `
     <div class="${UI.card} p-5 text-center">${UI.medalDot(kind, 'h-8 w-8 shadow-inner')}
       <div class="mt-2 text-3xl font-bold tabular-nums ${tone}">${value.toLocaleString('th-TH')}</div>
       <div class="text-sm text-brand-500 dark:text-gray-400">${label}</div></div>`;
 
   Api.getMedalTable(type)
-    .then(({ rows }) => {
-      const sum = (k) => rows.reduce((a, r) => a + r[k], 0);
+    .then(/* ประมวลผลต่อเมื่อคำขอก่อนหน้าสำเร็จในหน้าstatistics */ ({ rows }) => {
+      const sum = /* รวมยอดคอลัมน์ที่ระบุจากรายการสถิติ*/ (k) => rows.reduce(/* รวมค่าจากแต่ละรายการเป็นผลลัพธ์เดียวในหน้าstatistics */ (a, r) => a + r[k], 0);
       // ยังไม่มีเหรียญเลย: แสดงข้อความแทนตารางที่เป็น 0
       if (sum('total') === 0) {
         document.getElementById('table').innerHTML = UI.empty('ยังไม่มีข้อมูล จะประกาศให้ทราบเร็ว ๆ นี้');
@@ -41,5 +41,5 @@
         </div>`;
       document.getElementById('table').innerHTML = UI.medalTable(rows);
     })
-    .catch((err) => (document.getElementById('table').innerHTML = UI.error(err.message)));
+    .catch(/* จัดการข้อผิดพลาดจากงานแบบ asynchronousในหน้าstatistics */ (err) => (document.getElementById('table').innerHTML = UI.error(err.message)));
 })();

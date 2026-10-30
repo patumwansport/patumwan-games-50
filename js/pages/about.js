@@ -1,9 +1,9 @@
 // หน้า "ติดต่อเรา"
-(function () {
+(/* เริ่มต้นหน้าaboutและจำกัดตัวแปรให้อยู่ภายในส่วนนี้ */ function () {
   const { esc } = UI;
   const c = SiteConfig.contact;
   const mapSrc = UI.embedUrl(c.mapEmbed); // ว่าง = ลิงก์ไม่ใช่ Google Maps จึงไม่แสดง
-  const row = (icon, label, value) => `
+  const row = /* สร้างแถวแสดงข้อมูล */ (icon, label, value) => `
     <div class="flex gap-4">
       <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600 dark:bg-white/10 dark:text-brand-100">${icon}</span>
       <div><p class="text-sm text-brand-500 dark:text-gray-400">${label}</p><div class="mt-0.5 text-brand-800 dark:text-gray-100">${value}</div></div>

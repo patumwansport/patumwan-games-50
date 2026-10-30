@@ -1,5 +1,5 @@
 // หน้า "สรุปตารางการแข่งขัน" — ตารางรวมทุกนัดจาก Google Sheet พร้อมตัวกรอง
-(function () {
+(/* เริ่มต้นหน้าschedule-listและจำกัดตัวแปรให้อยู่ภายในส่วนนี้ */ function () {
   const { esc } = UI;
   const app = document.getElementById('app');
   const PAGE = 50;
@@ -12,41 +12,41 @@
   const tableEl = document.getElementById('table');
 
   Api.getAllMatches()
-    .then((raw) => {
+    .then(/* ประมวลผลต่อเมื่อคำขอก่อนหน้าสำเร็จในหน้าschedule-list */ (raw) => {
       if (!raw.length) return (tableEl.innerHTML = UI.empty('ยังไม่มีตารางการแข่งขัน'));
       const matches = MatchUI.sortMatches(raw);
-      const uniq = (key) => [...new Set(matches.map((m) => m[key]).filter(Boolean))];
+      const uniq = /* ตัดค่าซ้ำออกจากรายการ */ (key) => [...new Set(matches.map(/* แปลงข้อมูลแต่ละรายการเป็นค่าหรือส่วนแสดงผลในหน้าschedule-list */ (m) => m[key]).filter(Boolean))];
       const dates = uniq('gameDate');
-      const venues = uniq('stadium').sort((a, b) => a.localeCompare(b, 'th'));
+      const venues = uniq('stadium').sort(/* เปรียบเทียบรายการเพื่อจัดลำดับในหน้าschedule-list */ (a, b) => a.localeCompare(b, 'th'));
       let limit = PAGE;
 
-      const select = (id, label, options) => `
+      const select = /* เลือกข้อมูลและแจ้งส่วนที่เกี่ยวข้อง */ (id, label, options) => `
         <label class="text-sm"><span class="mb-1 block text-neutral-900 dark:text-gray-300">${label}</span>
           <select id="${id}" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 dark:border-white/10 dark:bg-gray-900">
-            <option value="">ทั้งหมด</option>${options.map((o) => `<option value="${esc(o.value ?? o)}">${esc(o.label ?? o)}</option>`).join('')}
+            <option value="">ทั้งหมด</option>${options.map(/* แปลงข้อมูลแต่ละรายการเป็นค่าหรือส่วนแสดงผลในหน้าschedule-list */ (o) => `<option value="${esc(o.value ?? o)}">${esc(o.label ?? o)}</option>`).join('')}
           </select></label>`;
 
       filtersEl.innerHTML = `
         <div class="${UI.card} mb-6 grid gap-4 p-4 sm:grid-cols-2 lg:grid-cols-4">
           ${UI.search('f-q', 'ค้นหา เช่น รายการ, โรงเรียน', 'ค้นหารายการหรือโรงเรียน', 'self-end')}
-          ${select('f-sport', 'ประเภทกีฬา', SiteData.sports.map((s) => ({ value: s.name, label: `${s.code}-${s.name}` })))}
+          ${select('f-sport', 'ประเภทกีฬา', SiteData.sports.map(/* แปลงข้อมูลแต่ละรายการเป็นค่าหรือส่วนแสดงผลในหน้าschedule-list */ (s) => ({ value: s.name, label: `${s.code}-${s.name}` })))}
           ${select('f-date', 'วันที่', dates)}
           ${select('f-venue', 'สถานที่', venues)}
         </div>`;
 
-      const val = (id) => document.getElementById(id).value;
-      const filtered = () => {
+      const val = /* อ่านค่าตัวกรองจากองค์ประกอบที่ระบุ*/ (id) => document.getElementById(id).value;
+      const filtered = /* เลือกข้อมูลตามตัวกรองปัจจุบัน */ () => {
         const q = val('f-q').trim().toLowerCase();
         return matches.filter(
-          (m) =>
+          /* เลือกเฉพาะรายการที่ตรงตามเงื่อนไขในหน้าschedule-list */ (m) =>
             (!val('f-sport') || m.sportName === val('f-sport')) &&
             (!val('f-date') || m.gameDate === val('f-date')) &&
             (!val('f-venue') || m.stadium === val('f-venue')) &&
-            (!q || [m.displayName, m.schools].some((v) => (v || '').toLowerCase().includes(q)))
+            (!q || [m.displayName, m.schools].some(/* ตรวจว่ามีรายการที่ตรงเงื่อนไขหรือไม่ในหน้าschedule-list */ (v) => (v || '').toLowerCase().includes(q)))
         );
       };
 
-      const render = () => {
+      const render = /* แสดงหน้าจอจากข้อมูลและสถานะปัจจุบัน */ () => {
         const list = filtered();
         if (!list.length) return (tableEl.innerHTML = UI.empty('ไม่พบรายการแข่งขันตามเงื่อนไขที่เลือก'));
         tableEl.innerHTML = `
@@ -59,7 +59,7 @@
               <tbody class="divide-y divide-gray-100 dark:divide-white/5">${list
                 .slice(0, limit)
                 .map(
-                  (m) => `<tr class="align-top hover:bg-brand-50/50 dark:hover:bg-white/5">
+                  /* แปลงข้อมูลแต่ละรายการเป็นค่าหรือส่วนแสดงผลในหน้าschedule-list */ (m) => `<tr class="align-top hover:bg-brand-50/50 dark:hover:bg-white/5">
                     <td class="whitespace-nowrap px-4 py-3">${esc(m.gameDate)}<div class="text-xs text-brand-500">${esc(m.gameTime)} น.</div></td>
                     <td class="px-4 py-3"><div class="flex items-center gap-2 whitespace-nowrap">${UI.sportBadge(m.sportCode || m.sportName.charAt(0), 'h-8 w-8 text-xs')}${esc(m.sportName)}</div></td>
                     <td class="px-4 py-3">${esc(m.displayName.replace(`${m.sportName} : `, ''))}${m.gameGroup ? `<div class="text-xs text-brand-500">กลุ่ม ${esc(m.gameGroup)}</div>` : ''}</td>
@@ -73,17 +73,17 @@
             </table>
           </div>
           ${list.length > limit ? `<div class="mt-6 text-center"><button type="button" id="more" class="rounded-full bg-brand-600 px-6 py-2.5 text-sm font-medium text-white shadow hover:bg-brand-700">แสดงเพิ่มเติม (${(list.length - limit).toLocaleString('th-TH')})</button></div>` : ''}`;
-        document.getElementById('more')?.addEventListener('click', () => {
+        document.getElementById('more')?.addEventListener('click', /* ตอบสนองเหตุการณ์ 'click' และอัปเดตข้อมูลหรือหน้าจอที่เกี่ยวข้อง */ () => {
           limit += PAGE;
           render();
         });
       };
 
-      filtersEl.addEventListener('input', () => {
+      filtersEl.addEventListener('input', /* ตอบสนองเหตุการณ์ 'input' และอัปเดตข้อมูลหรือหน้าจอที่เกี่ยวข้อง */ () => {
         limit = PAGE;
         render();
       });
       render();
     })
-    .catch((err) => (tableEl.innerHTML = UI.error(err.message)));
+    .catch(/* จัดการข้อผิดพลาดจากงานแบบ asynchronousในหน้าschedule-list */ (err) => (tableEl.innerHTML = UI.error(err.message)));
 })();

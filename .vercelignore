@@ -1,1 +1,11 @@
 registration/data/
+results/
+.cms/
+.local/
+scripts/
+admin-ui/
+supabase/
+tests/
+.*/
+skills/
+backups/

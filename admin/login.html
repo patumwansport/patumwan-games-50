@@ -1,0 +1,505 @@
+
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>เข้าสู่ระบบ | ปทุมวันเกมส์ ครั้งที่ 50</title>
+  <link rel="icon" type="image/png" href="/assets/favicon-32.png">
+
+  <style>
+    @font-face {
+      font-family: 'srinakharinwirot';
+      src: url('/assets/fonts/srinakharinwirot-regular.woff') format('woff');
+      font-display: swap;
+    }
+
+    /* ชุดสีปทุมวันเกมส์ */
+    :root {
+      --hero: oklch(41% .12 270);
+      --hero-hover: oklch(35% .12 270);
+      --navy: oklch(27% .035 270);
+      --pink: oklch(55% .19 1);
+      --pink-deep: oklch(45% .17 1);
+      --text: oklch(27% .035 270);
+      --muted: oklch(48% .025 270);
+      --line: oklch(91% .009 270);
+      --field: oklch(99.5% .003 270);
+      --card: oklch(99.5% .003 270);
+      --bg: oklch(98% .006 270);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+    }
+
+    body {
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+      background: var(--bg);
+      color: var(--text);
+      font-family:
+        'srinakharinwirot',
+        'Sarabun',
+        'Noto Sans Thai',
+        system-ui,
+        sans-serif;
+      font-size: 20px;
+      line-height: 1.5;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 460px;
+      padding: 32px 28px 28px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--card);
+      box-shadow: 0 2px 8px oklch(27% .035 270 / .03);
+    }
+
+    .brand {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .brand img {
+      width: 64px;
+      height: auto;
+    }
+
+    h1 {
+      margin: 12px 0 2px;
+      font-size: 28px;
+      line-height: 1.3;
+      font-weight: 400;
+      color: var(--navy);
+    }
+
+    .brand p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 18px;
+      color: var(--navy);
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    input {
+      width: 100%;
+      height: 52px;
+      padding: 0 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--field);
+      color: var(--text);
+      font: inherit;
+      outline: none;
+      transition:
+        border-color 0.15s,
+        box-shadow 0.15s,
+        background-color 0.15s;
+    }
+
+    input:focus {
+      border-color: var(--hero);
+      background: var(--card);
+      box-shadow: 0 0 0 3px oklch(41% .12 270 / .12);
+    }
+
+    input[aria-invalid='true'] {
+      border-color: var(--pink-deep);
+    }
+
+    .input-wrap input {
+      padding-right: 58px;
+    }
+
+    /* ปุ่มไอคอนแสดง/ซ่อนรหัสผ่าน */
+    .toggle {
+      position: absolute;
+      top: 9px;
+      right: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 34px;
+      padding: 0;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--hero);
+      cursor: pointer;
+      transition:
+        background-color 0.15s,
+        color 0.15s;
+    }
+
+    .toggle:hover {
+      background: var(--bg);
+      color: var(--hero-hover);
+    }
+
+    .toggle:focus-visible,
+    .submit:focus-visible,
+    .back:focus-visible {
+      outline: 3px solid rgba(46, 67, 138, 0.35);
+      outline-offset: 2px;
+    }
+
+    .password-icon {
+      display: block;
+      width: 21px;
+      height: 21px;
+      flex-shrink: 0;
+    }
+
+    .error {
+      margin: 0 0 16px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: oklch(96% .018 1);
+      color: var(--pink-deep);
+      font-size: 18px;
+    }
+
+    .error:empty {
+      display: none;
+    }
+
+    /* Flow Button */
+    .submit {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 52px;
+      margin-top: 4px;
+      border: 1.5px solid oklch(27% .035 270 / .4);
+      border-radius: 100px;
+      background: transparent;
+      color: var(--text);
+      font: inherit;
+      font-size: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      transition:
+        border-color .6s cubic-bezier(.23, 1, .32, 1),
+        border-radius .6s cubic-bezier(.23, 1, .32, 1),
+        color .6s cubic-bezier(.23, 1, .32, 1),
+        transform .2s ease-out;
+    }
+
+    .submit-fill {
+      position: absolute;
+      z-index: -1;
+      top: 50%;
+      left: 50%;
+      width: 16px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: var(--hero);
+      opacity: 0;
+      transform: translate(-50%, -50%);
+      transition:
+        width .8s cubic-bezier(.19, 1, .22, 1),
+        opacity .8s cubic-bezier(.19, 1, .22, 1);
+    }
+
+    .submit-label {
+      position: relative;
+      z-index: 1;
+      transform: translateX(-12px);
+      transition: transform .8s ease-out;
+    }
+
+    .submit-arrow {
+      position: absolute;
+      z-index: 9;
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition:
+        left .8s cubic-bezier(.34, 1.56, .64, 1),
+        right .8s cubic-bezier(.34, 1.56, .64, 1);
+    }
+
+    .submit-arrow-in {
+      left: -25%;
+    }
+
+    .submit-arrow-out {
+      right: 20px;
+    }
+
+    .submit:is(:hover, :focus-visible):not(:disabled) {
+      border-color: transparent;
+      border-radius: 12px;
+      color: var(--card);
+    }
+
+    .submit:is(:hover, :focus-visible):not(:disabled) .submit-fill {
+      width: calc(100% + 3rem);
+      opacity: 1;
+    }
+
+    .submit:is(:hover, :focus-visible):not(:disabled) .submit-label {
+      transform: translateX(12px);
+    }
+
+    .submit:is(:hover, :focus-visible):not(:disabled) .submit-arrow-in {
+      left: 20px;
+    }
+
+    .submit:is(:hover, :focus-visible):not(:disabled) .submit-arrow-out {
+      right: -25%;
+    }
+
+    .submit:active:not(:disabled) {
+      transform: scale(.97);
+    }
+
+    .submit:disabled {
+      opacity: 0.7;
+      cursor: progress;
+    }
+
+    .hint {
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: 17px;
+      text-align: center;
+    }
+
+    .field-hint {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 24px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 18px;
+      text-decoration: none;
+    }
+
+    .back:hover {
+      color: var(--navy);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="card">
+    <div class="brand">
+      <img
+        src="/assets/images/logo.png"
+        alt="ปทุมวันเกมส์ กีฬาสาธิตสามัคคี ครั้งที่ 50"
+        width="104"
+        height="103"
+      >
+      <h1>ระบบหลังบ้าน</h1>
+      <p>สำหรับเจ้าหน้าที่ ปทุมวันเกมส์ ครั้งที่ 50</p>
+    </div>
+
+    <form id="login-form" novalidate>
+      <p
+        id="error"
+        class="error"
+        role="alert"
+        aria-live="assertive"
+      ></p>
+
+      <div class="field">
+        <label for="username">ชื่อผู้ใช้</label>
+        <input
+          id="username"
+          name="username"
+          type="text"
+          autocomplete="username"
+          autocapitalize="none"
+          spellcheck="false"
+          required
+          aria-describedby="username-hint"
+        >
+      </div>
+
+      <div class="field">
+        <label for="password">รหัสผ่าน</label>
+
+        <div class="input-wrap">
+          <input
+            id="password"
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            required
+          >
+
+          <button
+            type="button"
+            id="toggle-password"
+            class="toggle"
+            aria-controls="password"
+            aria-pressed="false"
+            aria-label="แสดงรหัสผ่าน"
+          >
+            <!-- Eye icon -->
+            <svg
+              class="password-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <button type="submit" id="submit" class="submit">
+        <svg
+          class="submit-arrow submit-arrow-in"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path d="M5 12h14"/>
+          <path d="m12 5 7 7-7 7"/>
+        </svg>
+
+        <span id="submit-label" class="submit-label">
+          เข้าสู่ระบบ
+        </span>
+
+        <span class="submit-fill" aria-hidden="true"></span>
+
+        <svg
+          class="submit-arrow submit-arrow-out"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path d="M5 12h14"/>
+          <path d="m12 5 7 7-7 7"/>
+        </svg>
+      </button>
+
+      <p class="hint">
+        ลืมรหัสผ่านหรือยังไม่มีบัญชี ติดต่อผู้ดูแลเว็บไซต์
+      </p>
+    </form>
+  </main>
+
+  <a class="back" href="/">← กลับไปยังเว็บไซต์</a>
+
+  <script>
+    // Toggle password visibility
+    const passwordInput = document.getElementById('password');
+    const togglePassword = document.getElementById('toggle-password');
+
+    const eyeIcon = `
+      <svg
+        class="password-icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/>
+        <circle cx="12" cy="12" r="3"/>
+      </svg>
+    `;
+
+    const eyeOffIcon = `
+      <svg
+        class="password-icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="m3 3 18 18"/>
+        <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/>
+        <path d="M9.9 5.2A11 11 0 0 1 12 5c6.4 0 10 7 10 7a15.5 15.5 0 0 1-4 4.8"/>
+        <path d="M6.6 6.6C3.6 8.5 2 12 2 12s3.6 7 10 7a10.8 10.8 0 0 0 4.1-.8"/>
+      </svg>
+    `;
+
+    togglePassword.addEventListener('click', () => {
+      const showPassword = passwordInput.type === 'password';
+
+      passwordInput.type = showPassword ? 'text' : 'password';
+      togglePassword.innerHTML = showPassword ? eyeOffIcon : eyeIcon;
+
+      togglePassword.setAttribute(
+        'aria-pressed',
+        String(showPassword)
+      );
+
+      togglePassword.setAttribute(
+        'aria-label',
+        showPassword ? 'ซ่อนรหัสผ่าน' : 'แสดงรหัสผ่าน'
+      );
+    });
+  </script>
+
+  <!-- สคริปต์ระบบเข้าสู่ระบบเดิม -->
+  <script src="/admin/login.js"></script>
+</body>
+</html>

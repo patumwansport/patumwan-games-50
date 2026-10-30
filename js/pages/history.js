@@ -1,5 +1,5 @@
 // หน้า "ประวัติการแข่งขัน" — แบบเปิดโล่ง ไม่มีกล่อง (เส้นเวลาวาดตามการเลื่อน)
-(function () {
+(/* เริ่มต้นหน้าhistoryและจำกัดตัวแปรให้อยู่ภายในส่วนนี้ */ function () {
   const { esc } = UI;
   const h = SiteData.history;
   // สีจุด/หัวข้อบนเส้นเวลา วนสลับน้ำเงิน-ชมพู
@@ -11,7 +11,7 @@
   ];
 
   // ขนาด/ระยะเดียวกับหน้าแรก: ส่วนคั่นด้วยเส้นบน + py-12, หัวข้อชิดซ้าย
-  const section = (title, body) => `
+  const section = /* สร้างส่วนเนื้อหาจากข้อมูล */ (title, body) => `
     <section class="py-12">
       <div class="mb-8 flex items-center gap-6">
         <h2 class="shrink-0 text-2xl font-semibold tracking-tight text-brand-800 sm:text-3xl dark:text-white">${title}</h2>
@@ -20,13 +20,13 @@
       ${body}
     </section>`;
 
-  const paragraphs = (list) => list.map((p) => `<p class="mb-4 text-base leading-loose text-neutral-900 last:mb-0 dark:text-gray-300">${esc(p)}</p>`).join('');
+  const paragraphs = /* สร้างชุดย่อหน้าจากเนื้อหา */ (list) => list.map(/* แปลงข้อมูลแต่ละรายการเป็นค่าหรือส่วนแสดงผลในหน้าhistory */ (p) => `<p class="mb-4 text-base leading-loose text-neutral-900 last:mb-0 dark:text-gray-300">${esc(p)}</p>`).join('');
 
   // รูปในแต่ละครั้ง: 'path' หรือ { src, caption } (caption = ชื่อใต้รูป)
-  const images = (t) =>
+  const images = /* สร้างชุดภาพของเนื้อหา */ (t) =>
     t.images.length
       ? `<div class="mt-5 flex flex-wrap items-start gap-x-8 gap-y-6">${t.images
-          .map((img) => {
+          .map(/* แปลงข้อมูลแต่ละรายการเป็นค่าหรือส่วนแสดงผลในหน้าhistory */ (img) => {
             const { src, caption = '' } = typeof img === 'string' ? { src: img } : img;
             // กรอบขนาดเท่ากันทุกรูป ให้รูปและชื่อเรียงตรงแนวเดียวกัน
             return `<figure class="w-36 text-center sm:w-40">
@@ -37,7 +37,7 @@
           .join('')}</div>`
       : '';
 
-  const timelineItem = (t, i) => {
+  const timelineItem = /* สร้างรายการประวัติการแข่งขันหนึ่งช่วงเวลา*/ (t, i) => {
     const tone = TONES[i % TONES.length];
     const [head, sub = ''] = t.title.split(' - ');
     const dot = t.current ? 'bg-pink-500 ring-4 ring-pink-200 dark:ring-pink-500/30' : t.postponed ? 'bg-pink-700' : tone.dot;
@@ -51,7 +51,7 @@
         <span data-dot="${dot}" class="group absolute left-[7px] top-1.5 z-10 h-4 w-4 scale-75 rounded-full border-2 border-white bg-gray-300 transition-all duration-500 dark:border-gray-900 dark:bg-gray-700">${ping}</span>
         ${sub ? `<span class="inline-block rounded-full border px-3 py-1 text-xs font-medium tracking-wide ${pill}">${esc(sub)}</span>` : ''}
         <h3 class="mt-3 text-2xl font-bold ${title}">${esc(head)}</h3>
-        <div class="mt-3 space-y-3 text-base leading-loose text-neutral-900 dark:text-gray-300">${t.text.map((p) => `<p>${esc(p)}</p>`).join('')}</div>
+        <div class="mt-3 space-y-3 text-base leading-loose text-neutral-900 dark:text-gray-300">${t.text.map(/* แปลงข้อมูลแต่ละรายการเป็นค่าหรือส่วนแสดงผลในหน้าhistory */ (p) => `<p>${esc(p)}</p>`).join('')}</div>
         ${images(t)}
         ${t.current ? '<p class="mt-5 inline-block rounded-full bg-pink-500 px-4 py-1 text-sm font-semibold text-white">การแข่งขันครั้งปัจจุบัน</p>' : ''}
       </li>`;
@@ -65,13 +65,13 @@
       ${section('ความเป็นมา', paragraphs(h.background))}
 
       ${section('คณะกรรมการอำนวยการถาวร', `<div class="grid gap-x-10 gap-y-6 sm:grid-cols-2">${h.committee
-        .map((c) => `<div class="border-l-2 border-pink-300 pl-4 dark:border-pink-500/50">
+        .map(/* แปลงข้อมูลแต่ละรายการเป็นค่าหรือส่วนแสดงผลในหน้าhistory */ (c) => `<div class="border-l-2 border-pink-300 pl-4 dark:border-pink-500/50">
             <h3 class="font-semibold text-brand-800 dark:text-white">${esc(c.name)}</h3>
             <p class="mt-1 text-sm leading-relaxed text-neutral-900 dark:text-gray-300">${esc(c.role)}</p></div>`)
         .join('')}</div>`)}
 
       ${section('วัตถุประสงค์', `<ol class="grid gap-x-10 gap-y-6 sm:grid-cols-2">${h.objectives
-        .map((o) => {
+        .map(/* แปลงข้อมูลแต่ละรายการเป็นค่าหรือส่วนแสดงผลในหน้าhistory */ (o) => {
           // รูปแบบเดียวกับคณะกรรมการ: บรรทัดหลัก + หมายเหตุในวงเล็บเป็นบรรทัดเล็ก
           const [, text, note] = /^(.*?)\s*(?:\((.+)\))?$/.exec(o);
           return `<li class="self-start border-l-2 border-pink-300 pl-4 dark:border-pink-500/50">
@@ -97,6 +97,7 @@
   const dots = [...list.querySelectorAll('[data-dot]')];
   let ticking = false;
 
+  // อัปเดตสถานะหรือการแสดงผล
   function update() {
     ticking = false;
     const rect = list.getBoundingClientRect();
@@ -105,18 +106,18 @@
     const atBottom = innerHeight + scrollY >= document.documentElement.scrollHeight - 2;
     const reached = atBottom ? rect.height : Math.max(0, Math.min(rect.height, innerHeight / 2 - rect.top));
     progress.style.height = `${reached}px`;
-    dots.forEach((dot) => {
+    dots.forEach(/* ดำเนินการกับข้อมูลแต่ละรายการในหน้าhistory */ (dot) => {
       const on = dot.offsetTop + dot.offsetParent.offsetTop <= reached;
       if (on === dot.hasAttribute('data-on')) return;
       dot.toggleAttribute('data-on', on);
       dot.classList.toggle('scale-75', !on);
       dot.classList.toggle('scale-125', on);
-      dot.dataset.dot.split(' ').forEach((c) => dot.classList.toggle(c, on));
-      ['bg-gray-300', 'dark:bg-gray-700'].forEach((c) => dot.classList.toggle(c, !on));
+      dot.dataset.dot.split(' ').forEach(/* ดำเนินการกับข้อมูลแต่ละรายการในหน้าhistory */ (c) => dot.classList.toggle(c, on));
+      ['bg-gray-300', 'dark:bg-gray-700'].forEach(/* ดำเนินการกับข้อมูลแต่ละรายการในหน้าhistory */ (c) => dot.classList.toggle(c, !on));
     });
   }
 
-  const schedule = () => {
+  const schedule = /* จัดการตารางแข่งขันรายวัน ตัวกรอง และการส่งออกข้อมูล */ () => {
     if (!ticking) requestAnimationFrame(update);
     ticking = true;
   };

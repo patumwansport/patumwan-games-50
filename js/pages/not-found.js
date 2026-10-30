@@ -1,5 +1,5 @@
 // หน้า 404
-(function () {
+(/* เริ่มต้นหน้าnot-foundและจำกัดตัวแปรให้อยู่ภายในส่วนนี้ */ function () {
   document.getElementById('app').innerHTML = `
     <div class="py-20 text-center">
       <p class="text-8xl font-bold text-brand-600">404</p>

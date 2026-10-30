@@ -1,7 +1,7 @@
 // หน้า "ผู้ประสานงานการจัดการแข่งขัน"
-(function () {
+(/* เริ่มต้นหน้าorganizersและจำกัดตัวแปรให้อยู่ภายในส่วนนี้ */ function () {
   const { esc } = UI;
-  const tel = (p) => esc(p || '-');
+  const tel = /* สร้างลิงก์สำหรับโทรศัพท์ */ (p) => esc(p || '-');
 
   const title = UI.pageTitle('ผู้ประสานงานการจัดการแข่งขัน', 'ผู้ประสานงานการจัดการแข่งขัน ปทุมวันเกมส์ ครั้งที่ 50');
   if (!SiteData.organizers.length) {
@@ -19,11 +19,11 @@
         <tbody class="divide-y divide-gray-100 dark:divide-white/5">
           ${SiteData.organizers
             .map(
-              (o) => `<tr class="align-top hover:bg-brand-50/50 dark:hover:bg-white/5">
+              /* แปลงข้อมูลแต่ละรายการเป็นค่าหรือส่วนแสดงผลในหน้าorganizers */ (o) => `<tr class="align-top hover:bg-brand-50/50 dark:hover:bg-white/5">
                 <td class="px-4 py-4 text-center">${o.no}</td>
                 <td class="px-4 py-4 font-medium text-brand-800 dark:text-gray-100">${esc(o.group)}</td>
-                <td class="space-y-2 px-4 py-4">${o.people.map((p) => `<div>${esc(p.name)}</div>`).join('')}</td>
-                <td class="space-y-2 px-4 py-4 tabular-nums">${o.people.map((p) => `<div>${tel(p.phone)}</div>`).join('')}</td>
+                <td class="space-y-2 px-4 py-4">${o.people.map(/* แปลงข้อมูลแต่ละรายการเป็นค่าหรือส่วนแสดงผลในหน้าorganizers */ (p) => `<div>${esc(p.name)}</div>`).join('')}</td>
+                <td class="space-y-2 px-4 py-4 tabular-nums">${o.people.map(/* แปลงข้อมูลแต่ละรายการเป็นค่าหรือส่วนแสดงผลในหน้าorganizers */ (p) => `<div>${tel(p.phone)}</div>`).join('')}</td>
                 <td class="px-4 py-4 text-center">${o.qr ? `<a href="${UI.safeUrl(o.qr)}" ${UI.NEW_TAB}><img src="${UI.safeUrl(o.qr)}" alt="QR ${esc(o.group)}" loading="lazy" class="mx-auto h-24 w-24 rounded-lg bg-white object-contain p-1 ring-1 ring-black/5"></a>` : ''}</td>
               </tr>`
             )

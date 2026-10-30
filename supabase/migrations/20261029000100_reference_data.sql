@@ -1,0 +1,48 @@
+-- สร้างจาก scripts/supabase-reference.js (js/data/sports.js, js/data/institutions.js)
+insert into public.sports (id, code, name) values
+  (1, '01', 'กรีฑา'),
+  (2, '02', 'กอล์ฟ'),
+  (3, '03', 'ซอฟท์บอล'),
+  (4, '04', 'เซปักตะกร้อ'),
+  (5, '05', 'เทนนิส'),
+  (6, '06', 'เทเบิลเทนนิส'),
+  (7, '07', 'บาสเกตบอล'),
+  (8, '08', 'แบดมินตัน'),
+  (9, '09', 'เปตอง'),
+  (10, '10', 'ฟุตซอล'),
+  (11, '11', 'ฟุตบอล'),
+  (12, '12', 'ลีลาศ'),
+  (13, '13', 'วอลเลย์บอล'),
+  (14, '14', 'ว่ายน้ำ'),
+  (15, '15', 'หมากกระดาน'),
+  (16, '16', 'ฮอกกี้'),
+  (17, '17', 'แฮนด์บอล'),
+  (18, '18', 'บาสเกตบอล 3X3')
+on conflict (id) do update set code = excluded.code, name = excluded.name;
+
+insert into public.schools (no, name_th, name_en, abbr, thai_abbr, levels) values
+  (1, 'โรงเรียนสาธิตมหาวิทยาลัยศรีนครินทรวิโรฒ องครักษ์ สถาบันวิจัย พัฒนาและสาธิตการศึกษา', 'Ongkharak Demonstration School Srinakharinwirot University', 'ODS', 'สอร', array['p', 'm']::text[]),
+  (2, 'โรงเรียนสาธิตมหาวิทยาลัยพะเยา', 'Demonstration School, University of Phayao', 'DeSUP', 'สมพ', array['m']::text[]),
+  (3, 'โรงเรียนสาธิตแห่งมหาวิทยาลัยเกษตรศาสตร์ ศูนย์วิจัยและพัฒนาการศึกษา', 'Kasetsart University Laboratory School Center for Educational Research and Development', 'KUS', 'สมก', array['p', 'm']::text[]),
+  (4, 'โรงเรียนสาธิตแห่งมหาวิทยาลัยเกษตรศาสตร์ วิทยาเขตกำแพงแสน ศูนย์วิจัยและพัฒนาการศึกษา', 'Kasetsart University Laboratory School Kamphaeng Saen Campus Educational Research and Development Center', 'KUSK', 'กพส', array['p', 'm']::text[]),
+  (5, 'โรงเรียนสาธิตมหาวิทยาลัยขอนแก่น', 'KHON KAEN UNIVERSITY DEMONSTRATION SCHOOL', 'KKUDS', 'สมข.', array['p', 'm']::text[]),
+  (6, 'โรงเรียนสาธิตมหาวิทยาลัยขอนแก่น วิทยาเขตหนองคาย', 'Demonstration School of Khon Kaen University Nong Khai Campus', 'NKCDS', 'มข.นค.', array['p', 'm']::text[]),
+  (7, 'โรงเรียนสาธิตจุฬาลงกรณ์มหาวิทยาลัย ฝ่ายประถม', 'Chulalongkorn University Demonstration Elementary School', 'CUDE', 'จฬป', array['p']::text[]),
+  (8, 'โรงเรียนสาธิตจุฬาลงกรณ์มหาวิทยาลัย ฝ่ายมัธยม', 'Chulalongkorn University Demonstration Secondary School', 'CUDS', 'จฬม', array['m']::text[]),
+  (9, 'โรงเรียนสาธิตมหาวิทยาลัยเชียงใหม่', 'Chiang Mai University Demonstration School', 'CMUDS', 'สมช.', array['m']::text[]),
+  (10, 'โรงเรียนสาธิตมหาวิทยาลัยเชียงใหม่ ระดับอนุบาลและประถมศึกษา', 'Chiang Mai University Demonstration School (Kindergarten and Primary Levels)', 'CMUDS-ITPC', 'สมช. อ.ป.', array['p']::text[]),
+  (11, 'โรงเรียนมัธยมสาธิตมหาวิทยาลัยนเรศวร', 'Naresuan University Secondary Demonstration School', 'NUD', 'สมน', array['m']::text[]),
+  (12, 'โรงเรียนสาธิต "พิบูลบำเพ็ญ" มหาวิทยาลัยบูรพา', 'Piboonbumpen Demonstration School, Burapha University', 'PBU', 'พ.มบ.', array['p', 'm']::text[]),
+  (13, 'โรงเรียนสาธิตมหาวิทยาลัยมหาสารคาม (ฝ่ายประถม)', 'Mahasarakham University Demonstration School (Elementary)', 'MUDS', 'ปสธ', array['p']::text[]),
+  (14, 'โรงเรียนสาธิตมหาวิทยาลัยมหาสารคาม (ฝ่ายมัธยม)', 'Mahasarakham University Demonstration School (Secondary)', 'DMSU', 'สมค', array['m']::text[]),
+  (15, 'โรงเรียนสาธิตมหาวิทยาลัยรามคำแหง (ฝ่ายประถม)', 'Ramkhamhaeng University Demonstration School (Elementary)', 'RAM', 'มรป', array['p']::text[]),
+  (16, 'โรงเรียนสาธิตมหาวิทยาลัยรามคำแหง (ฝ่ายมัธยม)', 'The Demonstration School of Ramkhamhaeng University', 'DSRU', 'สธ.ม.ร.', array['m']::text[]),
+  (17, 'โรงเรียน สาธิตมหาวิทยาลัยศิลปากร (ปฐมวัยและประถมศึกษา)', 'The demonstration school of Silpakorn University (Elementary)', 'EDSU', 'ปศก', array['p']::text[]),
+  (18, 'โรงเรียนสาธิต มหาวิทยาลัยศิลปากร (มัธยมศึกษา)', 'The demonstration school of Silpakorn University (Secondary)', 'DSU', 'สมศก', array['m']::text[]),
+  (19, 'โรงเรียนสาธิตมหาวิทยาลัยศรีนครินทรวิโรฒ ปทุมวัน', 'Patumwan Demonstration School, Srinakharinwirot University', 'PDS', 'ปทว', array['m']::text[]),
+  (20, 'โรงเรียนสาธิตมหาวิทยาลัยศรีนครินทรวิโรฒ ประสานมิตร (ฝ่ายประถม)', 'Srinakharinwirot University Prasarnmit Demonstration School (Elementary)', 'PSP', 'ปสป', array['p']::text[]),
+  (21, 'โรงเรียนสาธิตมหาวิทยาลัยศรีนครินทรวิโรฒ ประสานมิตร (ฝ่ายมัธยม)', 'Srinakharinwirot University Prasarnmit Demonstration School (Secondary)', 'SPSM', 'สปสม', array['m']::text[]),
+  (22, 'โรงเรียนสาธิตมหาวิทยาลัยสงขลานครินทร์ (ฝ่ายประถมศึกษา)', 'Prince of Songkla University Primary Demonstration School', 'PSUDS', 'สมอ', array['p']::text[]),
+  (23, 'โรงเรียนสาธิตมหาวิทยาลัยสงขลานครินทร์ (ฝ่ายมัธยมศึกษา)', 'Prince of Songkla University Demonstration School (Secondary)', 'PSUPDS', 'สาธิต ม.อ.', array['m']::text[])
+on conflict (no) do update set name_th = excluded.name_th, name_en = excluded.name_en, abbr = excluded.abbr,
+  thai_abbr = excluded.thai_abbr, levels = excluded.levels;

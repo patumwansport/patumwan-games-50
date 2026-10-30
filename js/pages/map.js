@@ -1,5 +1,5 @@
 // หน้า "แผนที่สนามแข่งขัน"
-(function () {
+(/* เริ่มต้นหน้าmapและจำกัดตัวแปรให้อยู่ภายในส่วนนี้ */ function () {
   const { esc } = UI;
   const { venues } = SiteData.venues;
   const embed = UI.embedUrl(SiteData.venues.embed); // ว่าง = ลิงก์ไม่ใช่ Google Maps จึงไม่แสดง
@@ -14,7 +14,7 @@
     <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       ${venues
         .map(
-          (v) => `<article class="${UI.card} flex flex-col overflow-hidden">
+          /* แปลงข้อมูลแต่ละรายการเป็นค่าหรือส่วนแสดงผลในหน้าmap */ (v) => `<article class="${UI.card} flex flex-col overflow-hidden">
             <a href="${UI.safeUrl(v.image)}" ${UI.NEW_TAB} class="block aspect-[4/3] overflow-hidden bg-gray-100 dark:bg-gray-800">
               <img src="${UI.safeUrl(v.image)}" alt="${esc(v.title)}" loading="lazy" class="h-full w-full object-cover transition hover:scale-105">
             </a>

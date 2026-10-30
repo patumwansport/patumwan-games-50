@@ -24,6 +24,15 @@ window.SiteConfig = {
     mapEmbed: '', // ลิงก์ Google Maps embed ของสถานที่จัดงาน (ว่าง = ไม่แสดงแผนที่)
   },
 
+  // ผลที่อนุมัติแล้วจากระบบผลการแข่งขัน /admin/results/ (Supabase) ใช้แทน Google Sheet
+  // ว่าง = ใช้ Google Sheet ตามเดิม (ดู supabase/README.md ข้อ 7)
+  // resultsFeedKey เป็น publishable key (คีย์สาธารณะ) ห้ามใส่ secret / service_role key
+  resultsFeed: 'https://unxramvsubyjteyrfzbk.supabase.co/rest/v1/rpc/public_results',
+  resultsFeedKey: 'sb_publishable_4D9HoHSZRxNnqGVd3r6mtA_9qoFkSH9',
+  // URL ระบบลงทะเบียนที่ติดตั้งจริง เช่น https://registration.example.ac.th/
+  // เว้นว่าง: เปิดลิงก์ทดสอบพอร์ต 5700 เฉพาะเมื่อดูเว็บไซต์ผ่าน localhost/127.0.0.1
+  registrationUrl: '',
+
   // Google Sheet สำหรับตารางการแข่งขัน, ผลการแข่งขัน และสรุปเหรียญทุกหน้า (วิธีตั้งค่าดูใน README.md)
   // ใส่ลิงก์จาก ไฟล์ > แชร์ > เผยแพร่ทางเว็บ ของแต่ละแท็บ แบบ CSV (ว่าง = แสดง "ยังไม่มีข้อมูล")
   sheet: {
@@ -90,6 +99,24 @@ window.SiteConfig = {
     { id: 'souvenir', label: 'ของที่ระลึกการแข่งขัน', href: 'souvenir.html' },
     { id: 'news', label: 'ข่าวสารและกิจกรรม', href: 'news.html' },
     { id: 'contact', label: 'ติดต่อเรา', href: 'about-us.html' },
-    { id: 'register', label: 'ระบบลงทะเบียนนักกีฬา', href: '' }, // ใส่ลิงก์ระบบลงทะเบียนเมื่อพร้อม (เพิ่ม external: true ถ้าเป็นเว็บอื่น)
+    { id: 'register', label: 'ระบบลงทะเบียนนักกีฬา', href: '', external: true },
   ],
 };
+
+// เชื่อมเมนูเข้าระบบลงทะเบียนแยก โดยไม่ใช้ URL เครื่องทดสอบบนเว็บไซต์จริง
+(function connectRegistration() {
+  const config = window.SiteConfig;
+  const configured = config.registrationUrl.trim();
+  const local = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+  let href = '';
+  if (configured) {
+    try {
+      const url = new URL(configured);
+      if (url.protocol === 'https:' || (local && url.protocol === 'http:' && ['localhost', '127.0.0.1'].includes(url.hostname))) href = url.href;
+    } catch { /* URL ไม่ถูกต้อง ให้เมนูคงสถานะยังไม่เปิดใช้งาน */ }
+  } else if (local && window.location.protocol === 'http:') {
+    href = `http://${window.location.hostname}:5700/`;
+  }
+  const menu = config.menu.find(/* เลือกเมนูระบบลงทะเบียนนักกีฬา */ (item) => item.id === 'register');
+  if (menu) menu.href = href;
+})();

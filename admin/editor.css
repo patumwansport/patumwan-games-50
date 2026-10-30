@@ -1,0 +1,40 @@
+/* ฟอร์ม Decap CMS ในกรอบของหน้า /admin: เมนูด้านซ้ายของหน้าแอดมิน (admin-ui) ใช้แทนแถบด้านบนและเมนูคอลเลกชันของ Decap
+   ชื่อคลาสของ Decap มี label ต่อท้าย (เช่น css-xxxx-AppHeaderContent) ถ้าอัปเดตเวอร์ชัน Decap ให้ตรวจหน้านี้อีกครั้ง */
+@font-face {
+  font-family: 'srinakharinwirot';
+  src: url('/assets/fonts/srinakharinwirot-regular.woff') format('woff');
+  font-display: swap;
+}
+
+body {
+  font-size: var(--admin-body-size, 20px);
+  line-height: 1.6;
+  background: oklch(98% .006 270);
+  color: oklch(27% .035 270);
+  font-family: 'srinakharinwirot', 'Sarabun', 'Noto Sans Thai', system-ui, sans-serif;
+}
+
+/* ให้ฟอร์มด้านในต่อเนื่องกับเปลือกแอดมิน โดยคงการจัดวางและปุ่มของ CMS */
+input, textarea, select, button {
+  font-family: 'srinakharinwirot', 'Sarabun', 'Noto Sans Thai', system-ui, sans-serif !important;
+  font-size: var(--admin-control-size, 19px) !important;
+}
+label, [class*='ControlHint'], [class*='ControlLabel'] { font-size: var(--admin-label-size, 18px) !important; line-height: 1.6; }
+input:not([type='checkbox']):not([type='radio']), textarea, select {
+  border-radius: 8px;
+  border-color: oklch(88% .012 270);
+}
+input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-visible {
+  outline: 2px solid oklch(44% .12 270);
+  outline-offset: 2px;
+}
+
+/* แถบด้านบน (ปุ่มคลังไฟล์สื่อยังอยู่ในหน้า แต่ซ่อนไว้ หน้าแอดมินกดแทนให้) */
+header:has([class*='AppHeaderContent']) {
+  display: none !important;
+}
+
+/* เมนูคอลเลกชันด้านซ้ายของ Decap */
+[class*='SidebarContainer'] {
+  display: none !important;
+}
