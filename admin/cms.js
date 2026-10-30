@@ -1,10 +1,12 @@
-// ตั้งค่าฟอร์ม admin/editor.html ก่อนเริ่ม Decap CMS: ตรวจการเข้าสู่ระบบ รูปแบบไฟล์ js/data และตัวบันทึกผ่าน api/cms
+// ตั้งค่าฟอร์ม admin/editor.html ก่อนเริ่ม Decap CMS: ตรวจการเข้าสู่ระบบ รูปแบบไฟล์ js/data และตัวบันทึกผ่าน Edge Function cms
 window.CMS_MANUAL_INIT = true;
 
 const ADMIN_PAGE = './';
 const LOGIN_PAGE = 'login.html';
-// api/cms เป็น Vercel Function: เว็บบน GitHub Pages (ไฟล์ static อย่างเดียว) จะไม่มี path นี้
-const CMS_API = new URL('../api/cms', location.href).pathname;
+// Edge Function "cms" ใน Supabase (supabase/functions/cms) อ่านและ commit ไฟล์ใน GitHub แทนหน้าแอดมิน
+// อยู่นอกเว็บจึงใช้ได้ทั้งบน GitHub Pages, Vercel และ server ในเครื่อง
+const config = fetch('supabase.json', { cache: 'no-cache' }).then(/* ประมวลผลต่อเมื่อคำขอก่อนหน้าสำเร็จในหลังบ้าน */ (res) => res.json());
+const cmsApi = config.then(/* ประมวลผลต่อเมื่อคำขอก่อนหน้าสำเร็จในหลังบ้าน */ (c) => `${c.url}/functions/v1/cms`);
 
 // ฟอร์มนี้แสดงในกรอบของหน้า /admin (มีเมนูด้านซ้าย) ถ้าเปิดตรง ๆ ให้ไปหน้านั้นแทน
 if (window.top === window) location.replace(ADMIN_PAGE);
@@ -22,12 +24,13 @@ function goToLogin() {
 async function authFetch(url, init = {}) {
   const token = await auth.token();
   if (!token) return goToLogin();
-  const res = await fetch(url, { ...init, headers: { ...init.headers, Authorization: `Bearer ${token}` } });
+  const { publishableKey } = await config;
+  const res = await fetch(url, { ...init, headers: { ...init.headers, apikey: publishableKey, Authorization: `Bearer ${token}` } });
   if (res.status === 401) goToLogin();
   return res;
 }
 
-// ตัวบันทึก "session": ใช้ตัว proxy ของ Decap ส่งคำสั่งไปที่ api/cms พร้อม token แต่ให้ล็อกอิน/ออกจากระบบผ่านหน้า login ของเว็บ
+// ตัวบันทึก "session": ใช้ตัว proxy ของ Decap ส่งคำสั่งไปที่ Edge Function cms พร้อม token แต่ให้ล็อกอิน/ออกจากระบบผ่านหน้า login ของเว็บ
 // ลงทะเบียนตัวเชื่อม API ของ CMS
 function registerSessionBackend(username) {
   const proxy = CMS.getBackend('proxy');
@@ -43,23 +46,23 @@ function registerSessionBackend(username) {
         backend.authComponent = /* ประมวลผลขั้นตอนย่อยของหลังบ้านตามข้อมูลหรือสถานะที่รับมา */ () => goToLogin;
         backend.logout = /* ประมวลผลขั้นตอนย่อยของหลังบ้านตามข้อมูลหรือสถานะที่รับมา */ () => auth.signOut();
         backend.request = /* ประมวลผลขั้นตอนย่อยของหลังบ้านตามข้อมูลหรือสถานะที่รับมา */ async (req) => {
-          const res = await authFetch(CMS_API, {
+          const res = await authFetch(await cmsApi, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json; charset=utf-8' },
             body: JSON.stringify({ branch: backend.branch, ...req }),
           });
           const data = await res?.json().catch(/* จัดการข้อผิดพลาดจากงานแบบ asynchronousในหลังบ้าน */ () => ({}));
           if (res?.ok) return data;
-          if (res?.status === 404 || res?.status === 405) throw new Error('ระบบบันทึกเนื้อหาใช้ได้เมื่อเว็บ deploy บน Vercel เท่านั้น (GitHub Pages รันฟังก์ชันฝั่งเซิร์ฟเวอร์ไม่ได้) ดู README หัวข้อหน้าแอดมิน');
-          throw new Error(data?.error || 'บันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่');
+          throw new Error(data?.error || 'เชื่อมต่อระบบเนื้อหาไม่สำเร็จ กรุณาลองใหม่');
         };
-        // api/cms ส่งแค่รายชื่อไฟล์ รูปตัวอย่างโหลดทีละรูปพร้อม token แล้วแสดงเป็น blob URL
+        // Edge Function cms ส่งแค่รายชื่อไฟล์ รูปตัวอย่างโหลดทีละรูปพร้อม token แล้วแสดงเป็น blob URL
         backend.getMedia = /* ประมวลผลขั้นตอนย่อยของหลังบ้านตามข้อมูลหรือสถานะที่รับมา */ async (folder = backend.mediaFolder) => {
           const files = await backend.request({ action: 'getMedia', params: { branch: backend.branch, mediaFolder: folder } });
-          return files.map(/* แปลงข้อมูลแต่ละรายการเป็นค่าหรือส่วนแสดงผลในหลังบ้าน */ (f) => ({ ...f, url: `${CMS_API}?file=${encodeURIComponent(f.path)}`, displayURL: f.path }));
+          const api = await cmsApi;
+          return files.map(/* แปลงข้อมูลแต่ละรายการเป็นค่าหรือส่วนแสดงผลในหลังบ้าน */ (f) => ({ ...f, url: `${api}?file=${encodeURIComponent(f.path)}`, displayURL: f.path }));
         };
         backend.getMediaDisplayURL = /* ประมวลผลขั้นตอนย่อยของหลังบ้านตามข้อมูลหรือสถานะที่รับมา */ async (path) => {
-          const res = await authFetch(`${CMS_API}?file=${encodeURIComponent(path)}`);
+          const res = await authFetch(`${await cmsApi}?file=${encodeURIComponent(path)}`);
           if (!res?.ok) throw new Error('โหลดรูปตัวอย่างไม่สำเร็จ');
           return URL.createObjectURL(await res.blob());
         };

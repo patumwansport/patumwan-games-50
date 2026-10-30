@@ -68,12 +68,12 @@ supabase/                       ฐานข้อมูล บัญชีผ�
 
 เปิด `https://<โดเมนเว็บ>/admin/` แล้วเข้าสู่ระบบด้วย **ชื่อผู้ใช้และรหัสผ่าน** (หน้า `/admin/login.html`) เพื่อแก้ข่าวสารและข้อมูลใน `js/data/*.js` ผ่านฟอร์ม
 ชื่อผู้ใช้คือส่วนหน้า @ ของอีเมลโรงเรียน เช่น อีเมล `kittiya.kul@satitpatumwan.ac.th` เข้าสู่ระบบด้วย `kittiya.kul` (อีเมลโดเมนอื่นกรอกอีเมลเต็ม)
-กด "เผยแพร่" แล้วระบบจะ commit เข้า repo บน GitHub และ Vercel จะ deploy เว็บใหม่ให้เองภายในประมาณ 1 นาที
+กด "เผยแพร่" แล้วระบบจะ commit เข้า repo บน GitHub และ GitHub Pages จะ build เว็บใหม่ให้เองภายในประมาณ 1 นาที
 (ผลการแข่งขันและเหรียญยังกรอกใน Google Sheet ตามหัวข้อถัดไป)
 
 - **ใครเข้าได้**: บัญชีใน Supabase Auth ที่ IT Admin สร้างที่เมนู **Role manager** ผู้ใช้ไม่ต้องมีบัญชี GitHub
   แก้เนื้อหาได้เฉพาะ Role **IT Admin** และ **CMS Editor** (ฝ่ายเทคนิคกีฬาและผู้ตรวจผลเข้าสู่ระบบแล้วไปที่ระบบผลการแข่งขัน `/admin/results/` ทันที)
-- **บันทึกอย่างไร**: หน้าแอดมินส่งข้อมูลไปที่ `api/cms` ซึ่งตรวจการเข้าสู่ระบบ แล้ว commit ด้วย `GITHUB_TOKEN` ฝั่งเซิร์ฟเวอร์ (ผู้ใช้ไม่เห็น token)
+- **บันทึกอย่างไร**: หน้าแอดมินส่งข้อมูลไปที่ Edge Function `cms` ของ Supabase ซึ่งตรวจการเข้าสู่ระบบ แล้ว commit ด้วย `GITHUB_TOKEN` ฝั่งเซิร์ฟเวอร์ (ผู้ใช้ไม่เห็น token)
   แก้ได้เฉพาะ `js/data/*.js` และรูป (jpg, png, webp, gif, avif) / PDF ใน `assets/images`, `assets/documents`, `assets/uploads` ไฟล์โค้ดอื่นแตะไม่ได้
 - **รูป/ไฟล์ที่อัปโหลด** เก็บใน repo ตามโฟลเดอร์ของแต่ละช่อง (เช่น ข่าว → `assets/images/news/`, เอกสาร → `assets/documents/`)
   ไฟล์ละไม่เกิน 3 MB (แนะนำย่อรูปให้ไม่เกินประมาณ 1 MB) เพราะทุกไฟล์อยู่ใน repo ตลอดไป
@@ -91,11 +91,11 @@ supabase/                       ฐานข้อมูล บัญชีผ�
 | เว็บหลัก และผลการแข่งขันจาก Supabase | ใช้ได้ | ใช้ได้ |
 | `/admin` เข้าสู่ระบบ, Role manager, ตั้งค่า | ใช้ได้ (คุยกับ Supabase โดยตรง) | ใช้ได้ |
 | `/admin/results/` ระบบผลการแข่งขัน | ใช้ได้ | ใช้ได้ |
-| แก้ข่าว/ข้อมูลเว็บแล้วกด **เผยแพร่** (`api/cms`) | **ใช้ไม่ได้** (รันฟังก์ชันฝั่งเซิร์ฟเวอร์ไม่ได้) แก้ไฟล์ `js/data` ใน repo แทน | ใช้ได้ |
+| แก้ข่าว/ข้อมูลเว็บแล้วกด **เผยแพร่** (Edge Function `cms` ใน Supabase) | ใช้ได้ | ใช้ได้ |
 | security header ใน `vercel.json` | ไม่มีผล (เหลือ CSP แบบ meta ในหน้าเว็บหลัก) | ใช้ได้ |
 | กันโปรเจกต์ Supabase ถูกพัก | `.github/workflows/supabase-keepalive.yml` | `api/keepalive.js` (Vercel Cron) |
 
-ถ้าต้องการให้ปุ่มเผยแพร่ในหน้าแอดมินใช้ได้ ต้อง deploy repo นี้บน Vercel ตามขั้นตอนด้านล่าง
+ทุกส่วนที่ต้องใช้เซิร์ฟเวอร์อยู่บน Supabase จึงไม่ต้องใช้ Vercel
 
 ### ตั้งค่าครั้งแรก (ทำครั้งเดียว)
 
@@ -105,15 +105,14 @@ supabase/                       ฐานข้อมูล บัญชีผ�
    - Resource owner: เจ้าของ repo (organization ก็ได้), Repository access: **Only select repositories** เลือกเฉพาะ repo ของเว็บนี้
    - Permissions > Repository permissions > **Contents: Read and write** (อย่างอื่นไม่ต้องให้)
    - ตั้งวันหมดอายุให้เลยวันจบงาน และจดไว้ว่าต้องต่ออายุเมื่อไร
-3. Vercel > โปรเจกต์ > Settings > **Environment Variables** (เลือก Production) เพิ่ม แล้ว Redeploy
+3. ใส่ token ให้ Edge Function `cms` (รันในโฟลเดอร์ repo หลัง `supabase link` ตัว token ไม่แสดงบนจอและไม่ถูกเก็บในประวัติคำสั่ง)
 
-   | ชื่อ | ค่า |
-   |---|---|
-   | `GITHUB_TOKEN` | token จากข้อ 2 (เลือก Sensitive) |
-   | `GITHUB_REPO` | ไม่บังคับ: `เจ้าของ/ชื่อ-repo` ว่าง = repo ที่ Vercel ดึงมา deploy |
-   | `GITHUB_BRANCH` | ไม่บังคับ: ว่าง = `main` |
+   ```bash
+   read -s "T?GitHub token: " && echo && supabase secrets set GITHUB_TOKEN="$T"; unset T
+   ```
 
-4. ตรวจว่าโปรเจกต์ Vercel เชื่อมกับ repo นี้ (Settings > Git) เพื่อให้ commit จากหน้าแอดมิน deploy อัตโนมัติ
+   ไม่บังคับ: `GITHUB_REPO` (ว่าง = `patumwansport/patumwan-games-50`) และ `GITHUB_BRANCH` (ว่าง = `main`)
+   ระหว่างยังไม่ได้ตั้ง token ฟอร์มยังเปิดดูข้อมูลได้ (อ่านจาก repo สาธารณะ) แต่กดเผยแพร่และเปิดคลังไฟล์สื่อไม่ได้
 
 ### Role manager, Role และ Settings
 
@@ -148,7 +147,7 @@ npm run build:results   # เขียน admin/results/ (ระบบผลก�
 ### ทดสอบในเครื่อง
 
 เปิดเว็บด้วยเซิร์ฟเวอร์ในเครื่อง (เช่น `python3 -m http.server 5500`) แล้วเปิด http://localhost:5500/admin/login.html
-การเข้าสู่ระบบ Role manager และ Settings ใช้ Supabase ตาม `admin/supabase.json` (บัญชีจริง) ส่วนการบันทึกเนื้อหาต้องมี `api/cms` จึงต้องใช้ `vercel dev`
+ทุกอย่างใช้ Supabase ตาม `admin/supabase.json` (บัญชีจริง) รวมถึงการบันทึกเนื้อหา ซึ่ง commit เข้า repo จริงบน GitHub
 ทดสอบฐานข้อมูลและสิทธิ์โดยไม่แตะโปรเจกต์จริง: `PATH=/opt/homebrew/opt/postgresql@17/bin:$PATH ./scripts/test-supabase.sh`
 
 ## ผลการแข่งขันและเหรียญจาก Google Sheet
@@ -238,10 +237,10 @@ npm run build:results   # เขียน admin/results/ (ระบบผลก�
 - **`vercel.json`** ส่ง header ความปลอดภัยฝั่งเซิร์ฟเวอร์ (CSP, `frame-ancestors`, HSTS, `X-Frame-Options`, `nosniff`)
   หน้า `/admin` มี CSP แยก: อนุญาต Decap CMS จาก unpkg.com (ล็อกเวอร์ชันและตรวจ `integrity`) และ `'unsafe-eval'` ที่ Decap ต้องใช้ เฉพาะหน้านี้
 - **ล็อกอินหน้าแอดมิน**: ใช้ Supabase Auth (จำกัดการเดารหัสผ่านให้เอง และไม่บอกว่าชื่อผู้ใช้หรือรหัสผ่านผิด)
-  `api/_auth.js` ตรวจ access token ทุกคำขอ และอ่าน Role/สถานะบัญชีล่าสุดจากตาราง `profiles` ปิดบัญชีหรือเปลี่ยน Role จึงมีผลทันที
-- **บันทึกข้อมูล** (`api/cms.js`, `api/_github.js`): ทุกคำขอต้องล็อกอินและมาจากโดเมนเดียวกัน, เขียนได้เฉพาะ `js/data/*.js` และรูป/PDF ใน `assets`,
+  Edge Function `cms` ตรวจ access token ทุกคำขอ และอ่าน Role/สถานะบัญชีล่าสุดด้วย `me()` ปิดบัญชีหรือเปลี่ยน Role จึงมีผลทันที
+- **บันทึกข้อมูล** (`supabase/functions/cms`): ทุกคำขอต้องล็อกอินด้วย Role IT Admin หรือ CMS Editor, เขียนได้เฉพาะ `js/data/*.js` และรูป/PDF ใน `assets`,
   ไฟล์ `js/data` ถูกเขียนใหม่จากข้อมูล JSON เท่านั้น (ใส่สคริปต์แปลกปลอมมาก็ถูกตัดทิ้ง)
-  `GITHUB_TOKEN` อยู่ใน Environment Variables ของ Vercel เท่านั้น ห้ามใส่ในโค้ด Vercel ไม่ต้องมี service_role key ของ Supabase
+  `GITHUB_TOKEN` อยู่ใน Secrets ของ Supabase เท่านั้น ห้ามใส่ในโค้ด
   ถ้า deploy ที่อื่น ให้ตั้ง header เดียวกันในโฮสต์นั้น
 
 ## สิ่งที่ต่างจากเว็บต้นฉบับ

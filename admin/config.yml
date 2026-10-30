@@ -1,12 +1,13 @@
 # ตั้งค่า Decap CMS ของหน้า /admin (เอกสาร: https://decapcms.org/docs/configuration-options/)
-# ทุกครั้งที่กดเผยแพร่ ระบบจะ commit ไฟล์เข้า repo แล้ว Vercel จะ deploy เว็บใหม่ให้เอง
+# ทุกครั้งที่กดเผยแพร่ ระบบจะ commit ไฟล์เข้า repo แล้ว GitHub Pages จะ build เว็บใหม่ให้เอง
 # เข้าสู่ระบบที่หน้า /admin/login.html ด้วยบัญชี Supabase (จัดการบัญชีที่เมนู Role manager ดู supabase/README.md)
 locale: th
 
 backend:
-  # ตัวบันทึก session (admin/cms.js) ส่งคำสั่งไปที่ api/cms ซึ่ง commit เข้า GitHub ด้วย token ฝั่งเซิร์ฟเวอร์
-  # repo และ branch ที่บันทึกตั้งใน Environment Variables ของ Vercel (GITHUB_REPO, GITHUB_BRANCH)
+  # ตัวบันทึก session (admin/cms.js) ส่งคำสั่งไปที่ Edge Function cms ของ Supabase ซึ่ง commit เข้า GitHub ด้วย token ฝั่งเซิร์ฟเวอร์
+  # repo, branch และ token ตั้งใน Secrets ของ Supabase (GITHUB_TOKEN, GITHUB_REPO, GITHUB_BRANCH) ดู README.md หัวข้อตั้งค่าครั้งแรก
   name: session
+  # Decap ต้องมีค่านี้ แต่ admin/cms.js ส่งคำขอไปที่ Edge Function เอง (อ่าน url จาก supabase.json)
   proxy_url: /api/cms
   branch: main
 

@@ -13,14 +13,14 @@ import { applyTextSize, textSize } from "@/admin/preferences";
 
 declare global {
   interface Window {
-    /** ให้ฟอร์ม Decap ในกรอบ (admin/cms.js) ขอ token ล่าสุดไปเรียก api/cms */
+    /** ให้ฟอร์ม Decap ในกรอบ (admin/cms.js) ขอ token ล่าสุดไปเรียก Edge Function cms */
     adminAuth?: { username: string; token: () => Promise<string | null>; signOut: () => Promise<void> };
   }
 }
 
 applyTextSize(textSize());
 
-// ต้องล็อกอินก่อนจึงแสดงหน้าแอดมิน (ข้อมูลทุกอย่างยังตรวจสิทธิ์ซ้ำที่ฐานข้อมูลและ api/cms)
+// ต้องล็อกอินก่อนจึงแสดงหน้าแอดมิน (ข้อมูลทุกอย่างยังตรวจสิทธิ์ซ้ำที่ฐานข้อมูลและ Edge Function cms)
 currentUser().then(/* ประมวลผลต่อเมื่อคำขอก่อนหน้าสำเร็จในหลังบ้าน */ (session) => {
   if (session === null) return location.replace(LOGIN_PAGE);
   // ฝ่ายเทคนิคและผู้ตรวจมีงานเฉพาะระบบผลการแข่งขัน เข้าสู่ระบบแล้วไปที่นั่นเลย (เปิด #settings ได้ตามเดิม)

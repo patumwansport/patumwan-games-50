@@ -1,4 +1,4 @@
--- อัปเดตชนิดกีฬาและรายชื่อสถาบันใน Supabase ทันทีที่บันทึกไฟล์ js/data ผ่านหน้าแอดมิน (api/cms.js เรียกด้วย token ของผู้ใช้)
+-- อัปเดตชนิดกีฬาและรายชื่อสถาบันใน Supabase ทันทีที่บันทึกไฟล์ js/data ผ่านหน้าแอดมิน (Edge Function cms เรียกด้วย token ของผู้ใช้)
 -- ใช้ upsert เท่านั้น ไม่ลบแถวเดิม เพราะรายการแข่งขันอ้างอิงชนิดกีฬาอยู่
 
 create function public.sync_reference(p_sports jsonb default null, p_schools jsonb default null) returns jsonb

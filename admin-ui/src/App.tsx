@@ -37,7 +37,7 @@ const FIRST_ROUTE = findPage("news")!.page.route!;
 export default function App({ session }: { session: Session }) {
   const username = session.username;
   const canManage = session.role === "admin";
-  // ฝ่ายเทคนิคและผู้ตรวจผลไม่เห็นเมนูเนื้อหาเว็บไซต์ (api/cms ตรวจซ้ำ)
+  // ฝ่ายเทคนิคและผู้ตรวจผลไม่เห็นเมนูเนื้อหาเว็บไซต์ (Edge Function cms ตรวจซ้ำ)
   const canEdit = canEditContent(session.role);
   const canScore = canEnterResults(session.role);
   const allowed = /* ตรวจว่าผู้ใช้เปิดเมนูที่ระบุได้หรือไม่*/ (id: string) => { const target = findPage(id); return !!target && pageAllowed(target.page, canManage, canEdit, canScore); };

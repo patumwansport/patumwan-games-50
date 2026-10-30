@@ -7,7 +7,7 @@
 | Role | ค่าในฐานข้อมูล | สิทธิ์ |
 |---|---|---|
 | IT Admin | `admin` | ทุกอย่าง รวมถึงจัดการบัญชี |
-| CMS Editor | `editor` | แก้เนื้อหาเว็บไซต์ (`api/cms`) |
+| CMS Editor | `editor` | แก้เนื้อหาเว็บไซต์ (Edge Function `cms`) |
 | ฝ่ายเทคนิคกีฬา | `technician` | กรอกผลเฉพาะกีฬาใน `user_sports` (ต้องมีอย่างน้อยหนึ่งชนิด) |
 | ผู้ตรวจผลกีฬา | `reviewer` | ตรวจ/อนุมัติผลเฉพาะกีฬาใน `user_sports` (ต้องมีอย่างน้อยหนึ่งชนิด) |
 
@@ -19,7 +19,8 @@
 | `migrations/20261029000000_results_schema.sql` | ตาราง, RLS, ฟังก์ชันขั้นตอนอนุมัติ และสิทธิ์ |
 | `migrations/20261029000100_reference_data.sql` | ชนิดกีฬาและรายชื่อสถาบันจาก `js/data` |
 | `functions/accounts/` | Edge Function สร้างบัญชี แก้ Role/กีฬา/สถานะ รีเซ็ต/เปลี่ยนรหัสผ่าน (ใช้ service role) |
-| `../admin/supabase.json` | `url`, `publishableKey`, `loginDomain` ที่หน้าแอดมิน ระบบผลการแข่งขัน และ `api/_auth.js` ใช้ |
+| `functions/cms/` | Edge Function ของฟอร์มแก้ไขเนื้อหา อ่าน/commit ไฟล์ใน GitHub ด้วย secret `GITHUB_TOKEN` (ดู README หลัก หัวข้อตั้งค่าครั้งแรก) |
+| `../admin/supabase.json` | `url`, `publishableKey`, `loginDomain` ที่หน้าแอดมินและระบบผลการแข่งขันใช้ |
 | `../admin-ui/src/results/` | ระบบผลการแข่งขัน (`/admin/results/`) ตารางแข่งขัน กรอกผล ส่งตรวจ อนุมัติ ถอนผล build ด้วย `npm run build:results` |
 | `../tests/supabase/` และ `../scripts/test-supabase.sh` | ทดสอบ migration กับ Postgres ในเครื่อง |
 
@@ -45,7 +46,7 @@
 2. **สร้างตาราง** `supabase db push`
 3. **ปิดการสมัครเอง**: Dashboard > Authentication > Sign In / Providers > ปิด *Allow new users to sign up*
    (ค่า `enable_signup = false` ใน `config.toml` ใช้กับเครื่องในเครื่องเท่านั้น)
-4. **Deploy Edge Function** `supabase functions deploy accounts`
+4. **Deploy Edge Function** `supabase functions deploy accounts` และ `supabase functions deploy cms`
    secret ที่ตั้งได้ (ไม่บังคับ) ที่ Dashboard > Edge Functions > Secrets:
 
    | ชื่อ | ค่า |
@@ -102,7 +103,7 @@
 
 ## ดูแลระบบ
 
-- **ชนิดกีฬา/สถาบัน**: บันทึกที่หน้าแอดมิน (ข้อมูลเว็บไซต์ > ชนิดกีฬา / สถาบันที่เข้าร่วม) แล้ว `api/cms` อัปเดตตาราง `sports` / `schools` ให้เอง (`sync_reference()`, upsert ไม่ลบแถวเดิม)
+- **ชนิดกีฬา/สถาบัน**: บันทึกที่หน้าแอดมิน (ข้อมูลเว็บไซต์ > ชนิดกีฬา / สถาบันที่เข้าร่วม) แล้ว Edge Function `cms` อัปเดตตาราง `sports` / `schools` ให้เอง (`sync_reference()`, upsert ไม่ลบแถวเดิม)
   ถ้าแก้ไฟล์ `js/data` เองโดยไม่ผ่านหน้าแอดมิน ให้รัน `node scripts/supabase-reference.js > /tmp/ref.sql` แล้วรันใน SQL Editor
 - **ผู้ใช้ลืมรหัสผ่าน**: IT Admin กด **รีเซ็ตรหัสผ่าน** ที่ Role manager แล้วส่งรหัสชั่วคราวที่แสดงให้ผู้ใช้ ผู้ใช้เข้าด้วยรหัสนั้นแล้วตั้งใหม่
 - **IT Admin คนเดียวลืมรหัสผ่าน**: Dashboard > Authentication > Users > เลือกบัญชี > ตั้งรหัสใหม่

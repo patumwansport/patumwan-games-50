@@ -418,3 +418,7 @@ enabled = true
 # รองรับทั้ง JWT แบบเดิมและ signing key แบบใหม่ของ Supabase
 [functions.accounts]
 verify_jwt = false
+
+# Edge Function cms ตรวจ token ด้วย rpc("me") ของผู้ใช้เอง เหมือน accounts
+[functions.cms]
+verify_jwt = false

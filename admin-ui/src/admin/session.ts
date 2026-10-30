@@ -58,7 +58,7 @@ export async function currentUser(): Promise<Session | null> {
   }
 }
 
-/** token ล่าสุดสำหรับเรียก api/cms (supabase-js ต่ออายุให้เมื่อใกล้หมด) */
+/** token ล่าสุดสำหรับเรียก Edge Function cms (supabase-js ต่ออายุให้เมื่อใกล้หมด) */
 // อ่าน access token ของ session ปัจจุบัน
 export async function accessToken(): Promise<string | null> {
   return (await supabase().auth.getSession()).data.session?.access_token ?? null;
